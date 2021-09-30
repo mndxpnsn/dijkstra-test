@@ -98,14 +98,14 @@ class Heap {
 private:
     int heap_size;
     int size_array;
-    node* A;
+    node** A;
     node** n_ref;
     int* element_map;
 
     int parent(int i);
     int left(int i);
     int right(int i);
-    void min_heapify(node A[], int i);
+    void min_heapify(node* A[], int i);
 
 public:
     Heap(int size);
@@ -114,7 +114,7 @@ public:
     void set_heap(node B[]);
     void get_heap(node B[]);
     int get_heap_size();
-    node heap_extract_min();
+    node* heap_extract_min();
     void heap_decrease_key(int index, double key);
 
     node* get_heap_element(int index);
@@ -129,7 +129,7 @@ public:
 
 Heap::Heap(int size) {
     heap_size = size;
-    A = new node[size+1];
+    A = new node*[size+1];
     element_map = new int[size+1];
     size_array = size + 1;
     n_ref = new node*[size+1];
@@ -137,15 +137,19 @@ Heap::Heap(int size) {
     for(int i = 1; i <= heap_size; ++i) {
     	tot_num_ops++;
         element_map[i] = i;
-        n_ref[i] = new node;
-        n_ref[i]->pi = NULL;
+        A[i] = new node;
+        A[i]->pi = NULL;
 
     }
 }
 
 Heap::~Heap() {
-    delete [] A;
-    delete [] element_map;
+//    for(int i = 0; i < size_array; ++i) {
+//    	delete A[i];
+//    }
+//
+//    delete [] A;
+//    delete [] element_map;
 }
 
 int Heap::parent(int i) {
@@ -162,7 +166,7 @@ int Heap::right(int i) {
 
 node* Heap::get_heap_element(int node_index) {
     int index_in_heap = element_map[node_index];
-    return &A[index_in_heap];
+    return A[index_in_heap];
 }
 
 int Heap::get_heap_index(int node_index) {
@@ -171,29 +175,29 @@ int Heap::get_heap_index(int node_index) {
 }
 
 int Heap::get_root_index() {
-    return A[1].index;
+    return A[1]->index;
 }
 
-void Heap::min_heapify(node A[], int i) {
+void Heap::min_heapify(node* A[], int i) {
 	tot_num_ops++;
     int l, r, smallest;
     l = Heap::left(i);
     r = Heap::right(i);
-    if(l < heap_size + 1 && A[l].key < A[i].key) {
+    if(l < heap_size + 1 && A[l]->key < A[i]->key) {
         smallest = l;
     }
     else {
         smallest = i;
     }
-    if(r < heap_size + 1 && A[r].key < A[smallest].key) {
+    if(r < heap_size + 1 && A[r]->key < A[smallest]->key) {
         smallest = r;
     }
     if(smallest != i) {
-        node dummy;
+        node* dummy;
         dummy = A[i];
 
-        element_map[A[smallest].index] = i;
-        element_map[A[i].index] = smallest;
+        element_map[A[smallest]->index] = i;
+        element_map[A[i]->index] = smallest;
 
         A[i] = A[smallest];
         A[smallest] = dummy;
@@ -211,14 +215,13 @@ void Heap::build_min_heap() {
 void Heap::set_heap(node B[]) {
     for(int i = 1; i < heap_size + 1; ++i) {
     	tot_num_ops++;
-        A[i] = B[i];
-        n_ref[i] = &B[i];
+        A[i] = &B[i];
     }
 }
 
 void Heap::get_heap(node B[]) {
     for(int i = 1; i < heap_size + 1; ++i) {
-        B[i] = A[i];
+        B[i] = *A[i];
     }
 }
 
@@ -232,7 +235,7 @@ bool Heap::min_heap_verify() {
         int l, r;
         l = Heap::left(i);
         r = Heap::right(i);
-        if(A[i].key > A[l].key || A[i].key > A[r].key) {
+        if(A[i]->key > A[l]->key || A[i]->key > A[r]->key) {
             is_min_heap = false;
         }
     }
@@ -246,7 +249,7 @@ void Heap::print_heap() {
         l = Heap::left(i);
         r = Heap::right(i);
         if(l < heap_size + 1 && r < heap_size + 1) {
-            printf("node: %i, key: %i, key left child: %i, key right child: %i\n", i, A[i].key,  A[l].key,  A[r].key);
+            printf("node: %i, key: %i, key left child: %i, key right child: %i\n", i, A[i]->key,  A[l]->key,  A[r]->key);
         }
     }
 }
@@ -254,19 +257,19 @@ void Heap::print_heap() {
 void Heap::print_element_map() {
     for(int i = 1; i <= heap_size; ++i) {
         int index_loc = element_map[i];
-        std::cout << "index: " << i << ", A[index].index: " << A[index_loc].index
-                  << ", key: " << A[index_loc].key << ", i: " << i << std::endl;
+        std::cout << "index: " << i << ", A[index]->index: " << A[index_loc]->index
+                  << ", key: " << A[index_loc]->key << ", i: " << i << std::endl;
     }
 }
 
-node Heap::heap_extract_min() {
+node* Heap::heap_extract_min() {
 
     if(heap_size < 1) {
         std::cout << "heap size is less than 1" << std::endl;
     }
-    node min = A[1];
+    node* min = A[1];
 
-    element_map[A[heap_size].index] = 1;
+    element_map[A[heap_size]->index] = 1;
     A[1] = A[heap_size];
     heap_size = heap_size - 1;
 
@@ -276,17 +279,17 @@ node Heap::heap_extract_min() {
 }
 
 void Heap::heap_decrease_key(int index, double key) {
-    if(key > A[index].key) {
+    if(key > A[index]->key) {
         printf("new key is larger than current key\n");
     }
     else {
-        A[index].key = key;
-        while(index > 1 && A[parent(index)].key > A[index].key) {
+        A[index]->key = key;
+        while(index > 1 && A[parent(index)]->key > A[index]->key) {
         	tot_num_ops++;
-            element_map[A[index].index] = parent(index);
-            element_map[A[parent(index)].index] = index;
+            element_map[A[index]->index] = parent(index);
+            element_map[A[parent(index)]->index] = index;
 
-            node dummy = A[index];
+            node* dummy = A[index];
             A[index] = A[parent(index)];
             A[parent(index)] = dummy;
 
@@ -395,15 +398,15 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     int rs_elem_counter = 0;
     while(heap_size > 0) {
 
-        node u = min_heap.heap_extract_min();
+        node* u = min_heap.heap_extract_min();
         heap_size = min_heap.get_heap_size();
 
-        int u_index = u.index;
-        int num_adj_nodes = u.adj_nodes.size();
+        int u_index = u->index;
+        int num_adj_nodes = u->adj_nodes.size();
 
         for(int i = 0; i < num_adj_nodes; ++i) {
         	tot_num_ops++;
-            int it = u.adj_nodes[i];
+            int it = u->adj_nodes[i];
             node* v = min_heap.get_heap_element(it);
             int v_index = v->index;
 
@@ -411,12 +414,12 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
             //and the node at 1 may not be an adjacent node
             //Therefore adjacency must be verified with adj_mat
             if(adj_mat[u_index][v_index] == SETVAR) {
-                relax(&u, v, weight_mat, &min_heap);
+                relax(u, v, weight_mat, &min_heap);
             }
         }
 
-        rs_S.push_back(u);
-        index_map_end[u.index_og] = rs_elem_counter;
+        rs_S.push_back(*u);
+        index_map_end[u->index_og] = rs_elem_counter;
         rs_elem_counter++;
     }
 
@@ -1107,7 +1110,7 @@ int main(int argc, char* argv[]) {
     //Declarations
     int s = 2; //Start vertex must be greater or equal to 1
     int n = 2499; //Number of vertices
-    int num_edges = 3125; //Number of edges
+    int num_edges = 3125250; //Number of edges
 
     //Create edges
     std::vector< std::vector<int> > edges;
@@ -1136,10 +1139,10 @@ int main(int argc, char* argv[]) {
     //Print results
     float tot_num_ops_est = 10*n + 3*num_edges + 6.4*n*log(n)/log(2);
     float complexity_ratio = tot_num_ops / tot_num_ops_est;
-    int size_results = (int) results.size();
-    for(int i = 0; i < size_results; ++i) {
-        std::cout << results[i] << " ";
-    }
+//    int size_results = (int) results.size();
+//    for(int i = 0; i < size_results; ++i) {
+//        std::cout << results[i] << " ";
+//    }
     std::cout << std::endl;
     std::cout << "timing execution: " << time << std::endl;
     std::cout << "number of operations estimated 10V + 3E + 6.4VlgV: " << tot_num_ops_est << std::endl;
