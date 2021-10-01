@@ -99,7 +99,6 @@ private:
     int heap_size;
     int size_array;
     node** A;
-    node** n_ref;
     int* element_map;
 
     int parent(int i);
@@ -132,7 +131,6 @@ Heap::Heap(int size) {
     A = new node*[size+1];
     element_map = new int[size+1];
     size_array = size + 1;
-    n_ref = new node*[size+1];
     element_map[0] = 0;
     for(int i = 1; i <= heap_size; ++i) {
     	tot_num_ops++;
@@ -178,7 +176,9 @@ int Heap::get_root_index() {
     return A[1]->index;
 }
 
+int num_ops_extract_min = 0;
 void Heap::min_heapify(node* A[], int i) {
+	num_ops_extract_min++;
 	tot_num_ops++;
     int l, r, smallest;
     l = Heap::left(i);
@@ -278,6 +278,8 @@ node* Heap::heap_extract_min() {
     return min;
 }
 
+int num_ops_relax = 0;
+
 void Heap::heap_decrease_key(int index, double key) {
     if(key > A[index]->key) {
         printf("new key is larger than current key\n");
@@ -286,6 +288,7 @@ void Heap::heap_decrease_key(int index, double key) {
         A[index]->key = key;
         while(index > 1 && A[parent(index)]->key > A[index]->key) {
         	tot_num_ops++;
+        	num_ops_relax++;
             element_map[A[index]->index] = parent(index);
             element_map[A[parent(index)]->index] = index;
 
@@ -406,6 +409,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
         for(int i = 0; i < num_adj_nodes; ++i) {
         	tot_num_ops++;
+        	num_ops_relax++;
             int it = u->adj_nodes[i];
             node* v = min_heap.get_heap_element(it);
             int v_index = v->index;
@@ -978,6 +982,7 @@ void set_adj_and_weight_mat_and_ref(FibHeap* H,
                                     node** v_ref) {
 
 
+	//Initialize and insert references and nodes
     for(int i = 0; i < size_graph; ++i) {
         tot_num_ops++;
         v_ref[i] = new node;
@@ -1011,6 +1016,7 @@ void set_adj_and_weight_mat_and_ref(FibHeap* H,
         else if(elem_is_set[start][end] == SETVAR && weight_mat[start][end] >= weight) {
             weight_mat[start][end] = weight_mat[end][start] = weight;
         }
+
         adj_mat[start][end] = adj_mat[end][start] = SETVAR;
     }
 
@@ -1110,9 +1116,10 @@ int main(int argc, char* argv[]) {
     //Declarations
     int s = 2; //Start vertex must be greater or equal to 1
     int n = 2499; //Number of vertices
-    int num_edges = 3125250; //Number of edges
+    int num_edges = 312525; //Number of edges
 
     //Create edges
+    srand(time(NULL));
     std::vector< std::vector<int> > edges;
     for(int i = 0; i < num_edges; ++i) {
         int start_vert = rand() % n + 1;
@@ -1131,13 +1138,14 @@ int main(int argc, char* argv[]) {
     tv1 = clock();
 
     //Compute distances to nodes from start vertex
-    std::vector<int> results = shortest_reach(n, edges, s);
+    std::vector<int> results = shortest_reach2(n, edges, s);
 
     tv2 = clock();
     time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
 
     //Print results
     float tot_num_ops_est = 10*n + 3*num_edges + 6.4*n*log(n)/log(2);
+    float tot_num_ops_est_bin_min = 10*n + num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
     float complexity_ratio = tot_num_ops / tot_num_ops_est;
 //    int size_results = (int) results.size();
 //    for(int i = 0; i < size_results; ++i) {
@@ -1147,7 +1155,14 @@ int main(int argc, char* argv[]) {
     std::cout << "timing execution: " << time << std::endl;
     std::cout << "number of operations estimated 10V + 3E + 6.4VlgV: " << tot_num_ops_est << std::endl;
     std::cout << "number of operations measured: " << tot_num_ops << std::endl;
-    std::cout << "complexity ratio: " << complexity_ratio << std::endl;
+    std::cout << "number of operations estimated 10V + E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
+    std::cout << "num_ops_extract_min: " << num_ops_extract_min << std::endl;
+    float VlgV = n*log(n)/log(2);
+    float ElgV = num_edges*log(n)/log(2);
+    std::cout << "num_ops_extract_min/VlgV: " << (num_ops_extract_min/VlgV) << std::endl;
+    std::cout << "num_ops_relax/ElgV: " << (num_ops_relax/ElgV) << std::endl;
+    std::cout << "complexity ratio fib heap: " << complexity_ratio << std::endl;
+    std::cout << "complexity ratio bin min heap: " << (tot_num_ops/tot_num_ops_est_bin_min) << std::endl;
     std::cout << "done" << std::endl;
 
     return 0;
