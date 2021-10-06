@@ -492,22 +492,11 @@ void fib_heap_insert(FibHeap* H, node* x) {
 void print_root_list(node* z) {
     node* xt = z;
     if(xt != NULL) {
-        if(xt->right != z) {
-            while(xt->right != z) {
-                std::cout << "xt->key: " << xt->key;
-                std::cout << ", xt->degree: " << xt->degree << std::endl;
-                xt = xt->right;
-            }
-            if(xt->right == z) {
-                std::cout << "xt->key: " << xt->key;
-                std::cout << ", xt->degree: " << xt->degree << std::endl;
-            }
-        }
-        else {
-            std::cout << "X == X->RIGHT" << std::endl;
+        do {
             std::cout << "xt->key: " << xt->key;
             std::cout << ", xt->degree: " << xt->degree << std::endl;
-        }
+            xt = xt->right;
+        } while(xt != z);
     }
 }
 
@@ -537,112 +526,74 @@ void make_child_of(FibHeap* H, node* y, node* x) {
     x->degree = x->degree + 1;
 }
 
+void link(FibHeap* H, node** A, node* x, node* y, int d) {
+
+    //Make y child of x;
+    make_child_of(H, y, x);
+
+    A[d] = NULL;
+    A[d+1] = x;
+
+    if(y == H->min) {
+        H->min = x;
+    }
+}
+
+void link_dup_deg(FibHeap* H, node** A, node*& x, bool& there_is_dup) {
+    int d = x->degree;
+    //There is a node with the same degree and node is not node x
+    if(A[d] != NULL && A[d] != x) {
+        there_is_dup = true;
+        node* y = A[d];
+        //Link x and y
+        if(y->key > x->key) {
+            //Make y child of x
+            link(H, A, x, y, d);
+        }
+        else {
+            //Make x child of y
+            link(H, A, y, x, d);
+            x = y;
+        }
+    }
+    //There is no node with the same degree or node is node x
+    else {
+        A[d] = x;
+    }
+}
+
 void consolidate(FibHeap* H) {
 
+    //Compute upper bound root list
     double golden = (1.0 + sqrt(5.0)) / 2.0;
     double f = log(H->n) / log(golden);
     int D = floor(f + 0.01) + 1;
 
-    node** A = new node*[D + 2];
-    for(int i = 0; i < D + 2; ++i) {
+    //Allocate memory for root list construction
+    node** A = new node*[D + 1];
+    for(int i = 0; i < D + 1; ++i) {
         tot_num_ops++;
         A[i] = NULL;
     }
 
+    //Ensure all root nodes have unique degrees
     node* x = H->min;
     if(x != NULL) {
-        //Root list has more than one node
-        if(x->right != H->min) {
-
-            //Ensure all root nodes have unique degrees
-            bool there_is_dup = true;
-            while(there_is_dup) {
-                there_is_dup = false;
-                x = H->min;
-                while(x->right != H->min) {
-                    tot_num_ops++;
-                    int d = x->degree;
-                    if(A[d] != NULL && A[d] != x) {
-                        there_is_dup = true;
-                        node* y = A[d];
-                        if(y->key > x->key) {
-                            //Make y child of x;
-                             make_child_of(H, y, x);
-
-                             A[d] = NULL;
-                             A[d+1] = x;
-
-                            if(y == H->min) {
-                                H->min = x;
-                            }
-                        }
-                        else {
-                            //Make x child of y;
-                            make_child_of(H, x, y);
-
-                            A[d] = NULL;
-                            A[d+1] = y;
-
-                            if(x == H->min) {
-                                H->min = y;
-                            }
-
-                            x = y;
-                        }
-                    }
-                    else {
-                        A[d] = x;
-                    }
-                    x = x->right;
-                }
-
-                if(x->right == H->min) {
-                    tot_num_ops++;
-                    int d = x->degree;
-                    if(A[d] != NULL && A[d] != x) {
-                        there_is_dup = true;
-                        node* y = A[d];
-                        if(y->key > x->key) {
-                            //Make y child of x;
-                            make_child_of(H, y, x);
-
-                            A[d] = NULL;
-                            A[d+1] = x;
-
-                            if(y == H->min) {
-                                H->min = x;
-                            }
-                        }
-                        else {
-                            //Make x child of y;
-                            make_child_of(H, x, y);
-
-                            A[d] = NULL;
-                            A[d+1] = y;
-
-                            if(x == H->min) {
-                                H->min = y;
-                            }
-
-                            x = y;
-                        }
-                    }
-                    else {
-                        A[d] = x;
-                    }
-                }
-            }
-        }
-        //Root list has only one node
-        else {
-            int d = x->degree;
-            A[d] = x;
+        bool there_is_dup = true;
+        while(there_is_dup) {
+            there_is_dup = false;
+            x = H->min;
+            do {
+                tot_num_ops++;
+                link_dup_deg(H, A, x, there_is_dup);
+                x = x->right;
+            } while(x != H->min);
         }
     }
 
     //Reconstruct root list
     H->min = NULL;
-    for(int i = 0; i < D + 2; ++i) {
+    for(int i = 0; i < D + 1; ++i) {
         tot_num_ops++;
         if(A[i] != NULL) {
             if(H->min == NULL) {
@@ -668,63 +619,28 @@ void consolidate(FibHeap* H) {
 void print_child_list(node* child) {
     node* xt = child;
     if(xt != NULL) {
-        if(xt->right != child) {
-            while(xt->right != child) {
-                std::cout << "xt->child->key: " << xt->key;
-                std::cout << ", xt->child->degree: " << xt->degree << std::endl;
-                if(xt->child != NULL) {
-                    std::cout << "xt->child->child->key: " << xt->child->key << std::endl;
-                }
-                xt = xt->right;
-            }
-            if(xt->right == child) {
-                std::cout << "xt->child->key: " << xt->key;
-                std::cout << ", xt->child->degree: " << xt->degree << std::endl;
-                if(xt->child != NULL) {
-                    if(xt->child != NULL) {
-                        std::cout << "xt->child->child->key: " << xt->child->key << std::endl;
-                    }
-                }
-            }
-        }
-        else {
-            std::cout << "X->CHILD == X->CHILD->RIGHT" << std::endl;
+        do {
             std::cout << "xt->child->key: " << xt->key;
             std::cout << ", xt->child->degree: " << xt->degree << std::endl;
-        }
+            if(xt->child != NULL) {
+                std::cout << "xt->child->child->key: " << xt->child->key << std::endl;
+            }
+            xt = xt->right;
+        } while(xt != child);
     }
 }
 
 void print_list(node* z) {
     node* xt = z;
     if(xt != NULL) {
-        if(xt->right != z) {
-            while(xt->right != z) {
-                std::cout << "xt->key: " << xt->key;
-                std::cout << ", xt->degree: " << xt->degree << std::endl;
-                if(xt->child != NULL) {
-                    print_child_list(xt->child);
-                }
-                xt = xt->right;
-            }
-            if(xt->right == z) {
-                std::cout << "xt->key: " << xt->key;
-                std::cout << ", xt->degree: " << xt->degree << std::endl;
-                if(xt->child != NULL) {
-                    if(xt->child != NULL) {
-                        print_child_list(xt->child);
-                    }
-                }
-            }
-        }
-        else {
-            std::cout << "X == X->RIGHT" << std::endl;
+        do {
             std::cout << "xt->key: " << xt->key;
             std::cout << ", xt->degree: " << xt->degree << std::endl;
             if(xt->child != NULL) {
                 print_child_list(xt->child);
             }
-        }
+            xt = xt->right;
+        } while(xt != z);
     }
 }
 
@@ -734,21 +650,14 @@ bool numbers_children_match(node* z, int& num_nodes) {
 
     node* xt = z->child;
     if(xt != NULL) {
-        while(xt->right != z->child) {
+        do {
             num_of_nodes++;
             if(xt->child != NULL) {
                 nums_match = numbers_children_match(xt, num_nodes);
                 if(!nums_match) { return false; }
             }
             xt = xt->right;
-        }
-        if(xt->right == z->child) {
-            num_of_nodes++;
-            if(xt->child != NULL) {
-                nums_match = numbers_children_match(xt, num_nodes);
-                if(!nums_match) { return false; }
-            }
-        }
+        } while(xt != z->child);
 
         num_nodes = num_nodes + num_of_nodes;
 
@@ -767,21 +676,14 @@ fib_props numbers_match(node* z) {
 
     node* xt = z;
     if(xt != NULL) {
-        while(xt->right != z) {
+        do {
             num_nodes++;
             nums_match = numbers_children_match(xt, num_nodes);
             fib_heap_props.deg_is_num_child = nums_match;
             fib_heap_props.num_nodes = num_nodes;
             if(!nums_match) { return fib_heap_props; }
             xt = xt->right;
-        }
-        if(xt->right == z) {
-            num_nodes++;
-            nums_match = numbers_children_match(xt, num_nodes);
-            fib_heap_props.deg_is_num_child = nums_match;
-            fib_heap_props.num_nodes = num_nodes;
-            if(!nums_match) { return fib_heap_props; }
-        }
+        } while(xt != z);
     }
 
     fib_heap_props.deg_is_num_child = nums_match;
@@ -795,7 +697,7 @@ bool is_fib_heap_children(node* z) {
 
     node* xt = z->child;
     if(xt != NULL) {
-        while(xt->right != z->child) {
+        do {
             if(xt->p->key > xt->key) {
                 return is_fibheap = false;
             }
@@ -804,16 +706,7 @@ bool is_fib_heap_children(node* z) {
                 if(!is_fibheap) { return false; }
             }
             xt = xt->right;
-        }
-        if(xt->right == z->child) {
-            if(xt->p->key > xt->key) {
-                return is_fibheap = false;
-            }
-            if(xt->child != NULL) {
-                is_fibheap = is_fib_heap_children(xt);
-                if(!is_fibheap) { return false; }
-            }
-        }
+        } while(xt != z->child);
     }
 
     return is_fibheap;
@@ -822,13 +715,10 @@ bool is_fib_heap_children(node* z) {
 void nullify_children_parent_node(node* z) {
     node* xt = z->child;
     if(xt != NULL) {
-        while(xt->right != z->child) {
+        do {
             xt->p = NULL;
             xt = xt->right;
-        }
-        if(xt->right == z->child) {
-            xt->p = NULL;
-        }
+        } while(xt != z->child);
     }
 }
 
@@ -837,15 +727,11 @@ bool is_fib_heap(node* z) {
 
     node* xt = z;
     if(xt != NULL) {
-        while(xt->right != z) {
+        do {
             is_fibheap = is_fib_heap_children(xt);
             if(!is_fibheap) { return false; }
             xt = xt->right;
-        }
-        if(xt->right == z) {
-            is_fibheap = is_fib_heap_children(xt);
-            if(!is_fibheap) { return false; }
-        }
+        } while(xt != z);
     }
 
     return is_fibheap;
@@ -973,13 +859,12 @@ void set_index_map(int size_graph, int* index_map, int s) {
     }
 }
 
-void set_adj_and_weight_mat_and_ref(FibHeap* H,
-                                    int* index_map,
-                                    int** adj_mat,
-                                    int** weight_mat,
-                                    int size_graph,
-                                    std::vector< std::vector<int> >& edges,
-                                    node** v_ref) {
+void set_weight_mat_and_ref(FibHeap* H,
+                            int* index_map,
+                            int** weight_mat,
+                            int size_graph,
+                            std::vector< std::vector<int> >& edges,
+                            node** v_ref) {
 
 
 	//Initialize and insert references and nodes
@@ -1016,8 +901,6 @@ void set_adj_and_weight_mat_and_ref(FibHeap* H,
         else if(elem_is_set[start][end] == SETVAR && weight_mat[start][end] >= weight) {
             weight_mat[start][end] = weight_mat[end][start] = weight;
         }
-
-        adj_mat[start][end] = adj_mat[end][start] = SETVAR;
     }
 
     //Deallocate node flags
@@ -1025,10 +908,9 @@ void set_adj_and_weight_mat_and_ref(FibHeap* H,
 }
 
 bool check_fib_heap(FibHeap* H) {
-    /*This is the general test for the fibonacci heap.
-      The function returns true if the heap satisfies
-      the fibonacci heap properties
-     */
+    //This is the general test for the fibonacci heap.
+    //The function returns true if the heap satisfies
+    //the fibonacci heap properties
 
     //Compute heap properties
     fib_props fh_props = numbers_match(H->min);
@@ -1079,10 +961,9 @@ std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, i
     node** v_ref = new node*[num_nodes];
 
     //Initialize weight and adjacency matrices
-    int** adj_mat = int2D(n);
     int** weight_mat = int2D(n);
 
-    set_adj_and_weight_mat_and_ref(&H, index_map, adj_mat, weight_mat, n, edges, v_ref);
+    set_weight_mat_and_ref(&H, index_map, weight_mat, n, edges, v_ref);
 
     //Perform Dijkstra's algorithm
     dijkstra(&H, weight_mat, v_ref);
@@ -1103,7 +984,6 @@ std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, i
     }
 
     //Deallocate memory
-    free_int2D(adj_mat, n);
     free_int2D(weight_mat, n);
     free_node_ref(v_ref, n);
     delete [] index_map;
@@ -1115,11 +995,11 @@ int main(int argc, char* argv[]) {
 
     //Declarations
     int s = 2; //Start vertex must be greater or equal to 1
-    int n = 2499; //Number of vertices
-    int num_edges = 312525; //Number of edges
+    int n = 24990; //Number of vertices
+    int num_edges = 61250; //Number of edges
 
     //Create edges
-    srand(time(NULL));
+//    srand(time(NULL));
     std::vector< std::vector<int> > edges;
     for(int i = 0; i < num_edges; ++i) {
         int start_vert = rand() % n + 1;
@@ -1144,18 +1024,18 @@ int main(int argc, char* argv[]) {
     time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
 
     //Print results
-    float tot_num_ops_est = 10*n + 3*num_edges + 6.4*n*log(n)/log(2);
+    float tot_num_ops_est = 8*n + 3*num_edges + 6.4*n*log(n)/log(2);
     float tot_num_ops_est_bin_min = 10*n + num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
     float complexity_ratio = tot_num_ops / tot_num_ops_est;
 //    int size_results = (int) results.size();
 //    for(int i = 0; i < size_results; ++i) {
 //        std::cout << results[i] << " ";
 //    }
-    std::cout << std::endl;
+//    std::cout << std::endl;
     std::cout << "timing execution: " << time << std::endl;
-    std::cout << "number of operations estimated 10V + 3E + 6.4VlgV: " << tot_num_ops_est << std::endl;
+    std::cout << "number of operations estimated fib heap 8V + 3E + 6.4VlgV: " << tot_num_ops_est << std::endl;
     std::cout << "number of operations measured: " << tot_num_ops << std::endl;
-    std::cout << "number of operations estimated 10V + E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
+    std::cout << "number of operations estimated bin heap 10V + E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
     std::cout << "num_ops_extract_min: " << num_ops_extract_min << std::endl;
     float VlgV = n*log(n)/log(2);
     float ElgV = num_edges*log(n)/log(2);
