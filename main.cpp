@@ -68,11 +68,23 @@ int main(int argc, char* argv[]) {
     tv22 = clock();
     time2 = (tv22 - tv12)/(CLOCKS_PER_SEC / (double) 1000.0);
 
+    //Check if results of both methods are the same
+    bool results_match = true;
+    int size_res1 = (int) results.size();
+    int size_res2 = (int) results2.size();
+    if(size_res1 != size_res2) { results_match = false; }
+    for(int i = 0; i < size_res1; ++i) {
+    	if(results[i] != results2[i]) {
+    		results_match = false;
+    	}
+    }
+
     //Print results
     float tot_num_ops_est = 5*n + 4*num_edges + 6.4*n*log(n)/log(2);
     float complexity_ratio = tot_num_ops1 / tot_num_ops_est;
     float tot_num_ops_est_bin_min = 9*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
     float complexity_ratio2 = tot_num_ops / tot_num_ops_est_bin_min;
+    std::cout << "results obtained from bin heap and fib heap match: " << results_match << std::endl;
     std::cout << "timing execution fib heap: " << time << std::endl;
     std::cout << "timing execution bin heap: " << time2 << std::endl;
     std::cout << "number of operations estimated fib heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
