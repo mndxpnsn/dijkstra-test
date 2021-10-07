@@ -23,7 +23,7 @@ Heap::Heap(int size) {
     size_array = size + 1;
     element_map[0] = 0;
     for(int i = 1; i <= heap_size; ++i) {
-    	tot_num_ops++;
+        tot_num_ops++;
         element_map[i] = i;
         A[i] = new node;
         A[i]->pi = NULL;
@@ -33,7 +33,7 @@ Heap::Heap(int size) {
 
 Heap::~Heap() {
 //    for(int i = 0; i < size_array; ++i) {
-//    	delete A[i];
+//        delete A[i];
 //    }
 //
 //    delete [] A;
@@ -68,8 +68,8 @@ int Heap::get_root_index() {
 
 int num_ops_extract_min = 0;
 void Heap::min_heapify(node* A[], int i) {
-	num_ops_extract_min++;
-	tot_num_ops++;
+    num_ops_extract_min++;
+    tot_num_ops++;
     int l, r, smallest;
     l = Heap::left(i);
     r = Heap::right(i);
@@ -104,7 +104,7 @@ void Heap::build_min_heap() {
 
 void Heap::set_heap(node* B[]) {
     for(int i = 1; i < heap_size + 1; ++i) {
-    	tot_num_ops++;
+        tot_num_ops++;
         A[i] = B[i];
     }
 }
@@ -177,8 +177,8 @@ void Heap::heap_decrease_key(int index, double key) {
     else {
         A[index]->key = key;
         while(index > 1 && A[parent(index)]->key > A[index]->key) {
-        	tot_num_ops++;
-        	num_ops_relax++;
+            tot_num_ops++;
+            num_ops_relax++;
             element_map[A[index]->index] = parent(index);
             element_map[A[parent(index)]->index] = index;
 
@@ -205,14 +205,14 @@ void set_index_map(int size_graph, int* index_map, int* index_map_inverse, int* 
 
     int index_track = 1;
     for(int i = s; i <= size_graph; ++i) {
-    	tot_num_ops++;
+        tot_num_ops++;
         index_map[i] = index_track;
         index_map_inverse[index_track] = i;
         index_map_end[i] = 0;
         index_track++;
     }
     for(int i = 1; i <= s - 1; ++i) {
-    	tot_num_ops++;
+        tot_num_ops++;
         index_map[i] = index_track;
         index_map_inverse[index_track] = i;
         index_map_end[i] = 0;
@@ -220,20 +220,27 @@ void set_index_map(int size_graph, int* index_map, int* index_map_inverse, int* 
     }
 }
 
-void populate_adj_and_weight_hr(int* index_map,
-		                        int* index_map_inverse,
-		                        int** adj_mat,
-		                        int** weight_mat,
-								int size_graph,
-								std::vector< std::vector<int> > &edges,
-								node** heap,
-								int s) {
+int map_index2(int n, int index, int s) {
+    int r;
 
-    int** elem_is_set = int2D(size_graph + 1);
+    if(index >= s) { r = index - s + 1; }
+    else { r = n - s + index + 1; }
+
+    return r;
+}
+
+void populate_adj_and_weight_hr(int* index_map,
+                                int* index_map_inverse,
+                                int** adj_mat,
+                                int** weight_mat,
+                                int size_graph,
+                                std::vector< std::vector<int> > &edges,
+                                node** heap,
+                                int s) {
 
     for(int i = 1; i < size_graph + 1; ++i) {
-    	tot_num_ops++;
-    	heap[i] = new node;
+        tot_num_ops++;
+        heap[i] = new node;
         heap[i]->key = INF;
         heap[i]->pi = NULL;
         heap[i]->index = i;
@@ -243,26 +250,38 @@ void populate_adj_and_weight_hr(int* index_map,
 
     int num_edges = edges.size();
     for(int i = 0; i < num_edges; ++i) {
-    	tot_num_ops++;
-        int start = index_map[edges[i][0]];
-        int end = index_map[edges[i][1]];
+        tot_num_ops++;
+        int start_index = edges[i][0];
+        int end_index = edges[i][1];
         int weight = edges[i][2];
+
+        int start = map_index2(size_graph, start_index, s);
+        int end = map_index2(size_graph, end_index, s);
 
         heap[start]->adj_nodes.push_back(end);
         heap[end]->adj_nodes.push_back(start);
 
-        if(elem_is_set[start][end] != SETVAR) {
-            weight_mat[start][end] = weight_mat[end][start] = weight;
-            elem_is_set[start][end] = elem_is_set[end][start] = SETVAR;
-        }
-        else if(elem_is_set[start][end] == SETVAR && weight_mat[start][end] >= weight) {
-            weight_mat[start][end] = weight_mat[end][start] = weight;
-        }
-        adj_mat[start][end] = adj_mat[end][start] = SETVAR;
+        weight_mat[start][end] = weight;
+        weight_mat[end][start] = weight;
+
+        adj_mat[start][end] = SETVAR;
+        adj_mat[end][start] = SETVAR;
     }
 
-    //Deallocate set flags
-    free_int2D(elem_is_set, size_graph + 1);
+    for(int i = 0; i < num_edges; ++i) {
+        tot_num_ops++;
+        int start_index = edges[i][0];
+        int end_index = edges[i][1];
+        int weight = edges[i][2];
+
+        int start = map_index2(size_graph, start_index, s);
+        int end = map_index2(size_graph, end_index, s);
+
+        if(weight_mat[start][end] >= weight) {
+            weight_mat[start][end] = weight;
+            weight_mat[end][start] = weight;
+        }
+    }
 }
 
 std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
@@ -281,7 +300,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     int** adj_mat = int2D(n + 1);
     int** weight_mat = int2D(n + 1);
 
-	//Start measuring time
+    //Start measuring time
     clock_t tv1, tv2;
     double time;
     tv1 = clock();
@@ -312,8 +331,8 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
         int num_adj_nodes = u->adj_nodes.size();
 
         for(int i = 0; i < num_adj_nodes; ++i) {
-        	tot_num_ops++;
-        	num_ops_relax++;
+            tot_num_ops++;
+            num_ops_relax++;
             int it = u->adj_nodes[i];
             node* v = min_heap.get_heap_element(it);
             int v_index = v->index;
@@ -338,7 +357,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     std::vector<int> rs_S_reordered;
 
     for(int i = 1; i <= size_results; ++i) {
-    	tot_num_ops++;
+        tot_num_ops++;
         int j = index_map_end[i];
         if(rs_S[j]->index_og != s) {
             int key = rs_S[j]->key;

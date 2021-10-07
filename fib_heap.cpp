@@ -218,6 +218,9 @@ void consolidate(FibHeap* H) {
             }
         }
     }
+
+    //Free root list reference
+    delete [] A;
 }
 
 void print_child_list(node* child) {
@@ -479,7 +482,6 @@ void set_weight_mat_and_ref(int size_graph,
 
     //Set weight  matrix and adjacent nodes
     int num_edges = (int) edges.size();
-    int** elem_is_set = int2D(size_graph);
     for(int i = 0; i < num_edges; ++i) {
         tot_num_ops++;
         int start_index = edges[i][0] - 1;
@@ -492,22 +494,26 @@ void set_weight_mat_and_ref(int size_graph,
         node_refs[start]->adj_nodes.push_back(end);
         node_refs[end]->adj_nodes.push_back(start);
 
-        bool is_set = elem_is_set[start][end] == SETVAR;
+        weight_mat[start][end] = weight;
+        weight_mat[end][start] = weight;
+    }
+
+    //Traverse edges again to pick minimum weights
+    for(int i = 0; i < num_edges; ++i) {
+        tot_num_ops++;
+        int start_index = edges[i][0] - 1;
+        int end_index = edges[i][1] - 1;
+        int weight = edges[i][2];
+
+        int start = map_index(size_graph, start_index, start_vertex);
+        int end = map_index(size_graph, end_index, start_vertex);
+
         bool is_greater = weight_mat[start][end] >= weight;
-        if(!is_set) {
-            weight_mat[start][end] = weight;
-            weight_mat[end][start] = weight;
-            elem_is_set[start][end] = SETVAR;
-            elem_is_set[end][start] = SETVAR;
-        }
-        else if(is_set && is_greater) {
+        if(is_greater) {
             weight_mat[start][end] = weight;
             weight_mat[end][start] = weight;
         }
     }
-
-    //Deallocate node flags
-    free_int2D(elem_is_set, size_graph);
 }
 
 bool check_fib_heap(FibHeap* H) {

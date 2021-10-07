@@ -3,8 +3,11 @@
  *
  *  Created on: 30 Sep 2021
  *      Author: derekharrison
+ *
+ *      Compare complexity of Dijkstra's algorithm
+ *      using a Fibonacci heap and a binary min
+ *      heap.
  */
-
 
 #include <iostream>
 #include <stdio.h>
@@ -51,8 +54,8 @@ int main(int argc, char* argv[]) {
     time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
 
     //Print results
-    float tot_num_ops_est = 7*n + 3*num_edges + 6.4*n*log(n)/log(2);
-    float tot_num_ops_est_bin_min = 10*n + num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
+    float tot_num_ops_est = 5*n + 4*num_edges + 6.4*n*log(n)/log(2);
+    float tot_num_ops_est_bin_min = 6*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
     float complexity_ratio = tot_num_ops / tot_num_ops_est;
     int size_results = (int) results.size();
     for(int i = 0; i < size_results; ++i) {
@@ -60,9 +63,9 @@ int main(int argc, char* argv[]) {
     }
     std::cout << std::endl;
     std::cout << "timing execution: " << time << std::endl;
-    std::cout << "number of operations estimated fib heap 7V + 3E + 6.4VlgV: " << tot_num_ops_est << std::endl;
+    std::cout << "number of operations estimated fib heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
     std::cout << "number of operations measured: " << tot_num_ops << std::endl;
-    std::cout << "number of operations estimated bin heap 10V + E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
+    std::cout << "number of operations estimated bin heap 6V + 2E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
     std::cout << "complexity ratio fib heap: " << complexity_ratio << std::endl;
     std::cout << "complexity ratio bin min heap: " << (tot_num_ops/tot_num_ops_est_bin_min) << std::endl;
     std::cout << "done" << std::endl;
