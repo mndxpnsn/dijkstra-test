@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
     tv1 = clock();
 
     //Compute distances to nodes from start vertex
-    std::vector<int> results = shortest_reach(n, edges, s);
+    std::vector<int> results = shortest_reach2(n, edges, s);
 
     tv2 = clock();
     time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);

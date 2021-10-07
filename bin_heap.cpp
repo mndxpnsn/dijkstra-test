@@ -17,7 +17,6 @@
 #include "user_types.hpp"
 
 Heap::Heap(int size) {
-	tot_num_ops = 0;
     heap_size = size;
     A = new node*[size+1];
     element_map = new int[size+1];
