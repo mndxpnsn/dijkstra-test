@@ -48,26 +48,51 @@ int main(int argc, char* argv[]) {
     tv1 = clock();
 
     //Compute distances to nodes from start vertex
-    std::vector<int> results = shortest_reach2(n, edges, s);
+    std::vector<int> results = shortest_reach(n, edges, s);
 
     tv2 = clock();
     time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
 
+    int tot_num_ops1 = tot_num_ops;
+
+    clock_t tv12, tv22;
+    double time2;
+    tv12 = clock();
+
+    //Reset total number of operations counter
+    tot_num_ops = 0;
+
+    //Compute distances to nodes from start vertex
+    std::vector<int> results2 = shortest_reach2(n, edges, s);
+
+    tv22 = clock();
+    time2 = (tv22 - tv12)/(CLOCKS_PER_SEC / (double) 1000.0);
+
     //Print results
     float tot_num_ops_est = 5*n + 4*num_edges + 6.4*n*log(n)/log(2);
-    float tot_num_ops_est_bin_min = 6*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
-    float complexity_ratio = tot_num_ops / tot_num_ops_est;
+    float complexity_ratio = tot_num_ops1 / tot_num_ops_est;
+    float tot_num_ops_est_bin_min = 9*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
+    float complexity_ratio2 = tot_num_ops / tot_num_ops_est_bin_min;
+    std::cout << "timing execution fib heap: " << time << std::endl;
+    std::cout << "timing execution bin heap: " << time2 << std::endl;
+    std::cout << "number of operations estimated fib heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
+    std::cout << "number of operations estimated bin heap 9V + 2E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
+    std::cout << "number of operations measured fib heap: " << tot_num_ops1 << std::endl;
+    std::cout << "number of operations measured bin heap: " << tot_num_ops << std::endl;
+    std::cout << "complexity ratio fib heap: " << complexity_ratio << std::endl;
+    std::cout << "complexity ratio bin min heap: " << complexity_ratio2 << std::endl;
+
     int size_results = (int) results.size();
     for(int i = 0; i < size_results; ++i) {
-        std::cout << results[i] << " ";
+    	std::cout << results[i] << " ";
     }
     std::cout << std::endl;
-    std::cout << "timing execution: " << time << std::endl;
-    std::cout << "number of operations estimated fib heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
-    std::cout << "number of operations measured: " << tot_num_ops << std::endl;
-    std::cout << "number of operations estimated bin heap 6V + 2E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
-    std::cout << "complexity ratio fib heap: " << complexity_ratio << std::endl;
-    std::cout << "complexity ratio bin min heap: " << (tot_num_ops/tot_num_ops_est_bin_min) << std::endl;
+
+    int size_results2 = (int) results2.size();
+    for(int i = 0; i < size_results2; ++i) {
+    	std::cout << results2[i] << " ";
+    }
+    std::cout << std::endl;
     std::cout << "done" << std::endl;
 
     return 0;

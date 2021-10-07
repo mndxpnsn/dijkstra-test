@@ -288,7 +288,6 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
     std::vector<node*> rs_S;
 
-
     //Set index maps
     int* index_map = new int[n+1];
     int* index_map_inverse = new int[n+1];
@@ -300,19 +299,8 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     int** adj_mat = int2D(n + 1);
     int** weight_mat = int2D(n + 1);
 
-    //Start measuring time
-    clock_t tv1, tv2;
-    double time;
-    tv1 = clock();
-
     populate_adj_and_weight_hr(index_map, index_map_inverse, adj_mat, weight_mat, n, edges, heap, s);
 
-    //End measuring time
-    tv2 = clock();
-    time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
-
-    //Print time
-    std::cout << "timing execution shortest reach 2: " << time << std::endl;
 
     //Set heap and build heap
     Heap min_heap(n);
@@ -349,8 +337,6 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
         index_map_end[u->index_og] = rs_elem_counter;
         rs_elem_counter++;
     }
-
-
 
     //Reorder results
     int size_results = rs_S.size();
