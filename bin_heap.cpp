@@ -214,7 +214,7 @@ int map_inverse(int n, int index, int s) {
 
     r = s + index - 1;
     if(r > n) {
-    	r = r - n;
+        r = r - n;
     }
 
     return r;
