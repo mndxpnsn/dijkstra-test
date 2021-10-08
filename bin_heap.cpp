@@ -220,8 +220,7 @@ int map_inverse(int n, int index, int s) {
     return r;
 }
 
-void populate_adj_and_weight_hr(int* index_map_end,
-		                        int** adj_mat,
+void populate_adj_and_weight_hr(int** adj_mat,
                                 int** weight_mat,
                                 int size_graph,
                                 std::vector< std::vector<int> > &edges,
@@ -288,7 +287,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     int** weight_mat = int2D(n + 1);
 
     //Populate weight and adjacency matrices and initialize heap
-    populate_adj_and_weight_hr(index_map_end, adj_mat, weight_mat, n, edges, heap, s);
+    populate_adj_and_weight_hr(adj_mat, weight_mat, n, edges, heap, s);
 
     //Set heap and build heap
     Heap min_heap(n);
