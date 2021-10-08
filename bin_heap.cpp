@@ -200,26 +200,6 @@ void relax(node* u, node* v, int** w, Heap* heap) {
     }
 }
 
-void set_index_map(int size_graph, int* index_map, int* index_map_inverse, int* index_map_end, int s) {
-    index_map[0] = index_map_inverse[0] = 0; //Point to zero for unused element
-
-    int index_track = 1;
-    for(int i = s; i <= size_graph; ++i) {
-        tot_num_ops++;
-        index_map[i] = index_track;
-        index_map_inverse[index_track] = i;
-        index_map_end[i] = 0;
-        index_track++;
-    }
-    for(int i = 1; i <= s - 1; ++i) {
-        tot_num_ops++;
-        index_map[i] = index_track;
-        index_map_inverse[index_track] = i;
-        index_map_end[i] = 0;
-        index_track++;
-    }
-}
-
 int map_index2(int n, int index, int s) {
     int r;
 
@@ -229,9 +209,19 @@ int map_index2(int n, int index, int s) {
     return r;
 }
 
-void populate_adj_and_weight_hr(int* index_map,
-                                int* index_map_inverse,
-                                int** adj_mat,
+int map_inverse(int n, int index, int s) {
+    int r;
+
+    r = s + index - 1;
+    if(r > n) {
+    	r = r - n;
+    }
+
+    return r;
+}
+
+void populate_adj_and_weight_hr(int* index_map_end,
+		                        int** adj_mat,
                                 int** weight_mat,
                                 int size_graph,
                                 std::vector< std::vector<int> > &edges,
@@ -244,8 +234,9 @@ void populate_adj_and_weight_hr(int* index_map,
         heap[i]->key = INF;
         heap[i]->pi = NULL;
         heap[i]->index = i;
-        heap[i]->index_og = index_map_inverse[i];
+        heap[i]->index_og = map_inverse(size_graph, i, s);
     }
+
     heap[1]->key = 0;
 
     int num_edges = edges.size();
@@ -289,18 +280,15 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     std::vector<node*> rs_S;
 
     //Set index maps
-    int* index_map = new int[n+1];
-    int* index_map_inverse = new int[n+1];
     int* index_map_end = new int[n+1];
-    set_index_map(n, index_map, index_map_inverse, index_map_end, s);
 
     //Initialize weight and adjacency matrices and binary min heap
     node** heap = new node*[n + 1];
     int** adj_mat = int2D(n + 1);
     int** weight_mat = int2D(n + 1);
 
-    populate_adj_and_weight_hr(index_map, index_map_inverse, adj_mat, weight_mat, n, edges, heap, s);
-
+    //Populate weight and adjacency matrices and initialize heap
+    populate_adj_and_weight_hr(index_map_end, adj_mat, weight_mat, n, edges, heap, s);
 
     //Set heap and build heap
     Heap min_heap(n);
@@ -356,8 +344,6 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     free_int2D(adj_mat, n + 1);
     free_int2D(weight_mat, n + 1);
     delete [] heap;
-    delete [] index_map;
-    delete [] index_map_inverse;
     delete [] index_map_end;
 
     return rs_S_reordered;
