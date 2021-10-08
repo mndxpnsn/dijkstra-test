@@ -44,30 +44,33 @@ int main(int argc, char* argv[]) {
         edges.push_back(edge_elem);
     }
 
-    clock_t tv1, tv2;
+    //Time results based on Fibonacci heap
+    clock_t start_time_fib_heap, end_time_fib_heap;
     double time;
-    tv1 = clock();
+    start_time_fib_heap = clock();
 
     //Compute distances to nodes from start vertex using a fibonacci heap
     std::vector<int> results = shortest_reach(n, edges, s);
 
-    tv2 = clock();
-    time = (tv2 - tv1)/(CLOCKS_PER_SEC / (double) 1000.0);
+    end_time_fib_heap = clock();
+    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
 
+    //Store results computation based on Fibonacci heap
     int tot_num_ops1 = tot_num_ops;
-
-    clock_t tv12, tv22;
-    double time2;
-    tv12 = clock();
 
     //Reset total number of operations counter
     tot_num_ops = 0;
 
+    //Time results based on binary heap
+    clock_t start_time_bin_heap, end_time_bin_heap;
+    double time2;
+    start_time_bin_heap = clock();
+
     //Compute distances to nodes from start vertex using a binary heap
     std::vector<int> results2 = shortest_reach2(n, edges, s);
 
-    tv22 = clock();
-    time2 = (tv22 - tv12)/(CLOCKS_PER_SEC / (double) 1000.0);
+    end_time_bin_heap = clock();
+    time2 = (double) (end_time_bin_heap - start_time_bin_heap) / CLOCKS_PER_SEC * 1000.0;
 
     //Check if results of both methods are the same
     bool results_match = true;
