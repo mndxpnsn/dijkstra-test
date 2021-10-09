@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     //Declarations
     int s = 2; //Start vertex must be greater or equal to 1
     int n = 2499; //Number of vertices
-    int num_edges = 10*n; //Number of edges
+    int num_edges = 2*n; //Number of edges
 
     //Create edges
     srand(time(NULL));
@@ -114,9 +114,14 @@ int main(int argc, char* argv[]) {
     float complexity_ratio = tot_num_ops1 / tot_num_ops_est;
     float tot_num_ops_est_bin_min = 9*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
     float complexity_ratio2 = tot_num_ops2 / tot_num_ops_est_bin_min;
+
+    std::cout << "Execution results:" << std::endl;
     std::cout << "results obtained from binary heap and fibonacci heap match: " << results_match << std::endl;
     std::cout << "timing execution fibonacci heap: " << time << std::endl;
     std::cout << "timing execution binary heap: " << time2 << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Estimations number of operations:" << std::endl;
     std::cout << "number of operations estimated fibonacci heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
     std::cout << "5V: " << 5*n << std::endl;
     std::cout << "4E: " << 4*num_edges << std::endl;
@@ -126,6 +131,9 @@ int main(int argc, char* argv[]) {
     std::cout << "2E: " << 2*num_edges << std::endl;
     std::cout << "0.9VlgV: " << 0.9*n*log(n)/log(2) << std::endl;
     std::cout << "0.18ElgV: " << 0.18*num_edges*log(n)/log(2) << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Measurements number of operations:" << std::endl;
     std::cout << "number of operations measured fibonacci heap: " << tot_num_ops1 << std::endl;
     std::cout << "number of operations measured binary heap: " << tot_num_ops2 << std::endl;
     std::cout << "number of operations relax fibonacci heap: " << num_ops_relax1 << std::endl;
@@ -134,12 +142,13 @@ int main(int argc, char* argv[]) {
     std::cout << "number of operations decrease key binary heap: " << num_ops_decrease_key2 << std::endl;
     std::cout << "number of operations extract min fibonacci heap: " << num_ops_extract_min1 << std::endl;
     std::cout << "number of operations extract min binary heap: " << num_ops_extract_min2 << std::endl;
-    std::cout << "fibonacci heap num_ops_extract_min / VlgV: " << (num_ops_extract_min1 / (n*log(n)/log(2))) << std::endl;
-    std::cout << "binary heap num_ops_extract_min / VlgV: " << (num_ops_extract_min2 / (n*log(n)/log(2))) << std::endl;
+    std::cout << "number of overhead operations fibonacci heap: " << num_ops_v_overhead1 + num_ops_e_overhead1 << std::endl;
+    std::cout << "number of overhead operations binary heap: " << num_ops_v_overhead2 + num_ops_e_overhead2 << std::endl;
+    std::cout << std::endl;
+
+    std::cout << "Complexity and total number of operations ratios:" << std::endl;
     std::cout << "complexity ratio fibonacci heap: " << complexity_ratio << std::endl;
     std::cout << "complexity ratio binary min heap: " << complexity_ratio2 << std::endl;
-    std::cout << "fibonacci heap ratio: num_ops/4E: " << (float) tot_num_ops1 / (4*num_edges) << std::endl;
-    std::cout << "binary heap ratio: num_ops/4E: " << (float) tot_num_ops2 / (4*num_edges) << std::endl;
     std::cout << "fibonacci heap tot num ops ratio: " << ((float) tot_num_ops1) / (num_ops_relax1 + num_ops_decrease_key1 + num_ops_extract_min1 + num_ops_v_overhead1 + num_ops_e_overhead1) << std::endl;
     std::cout << "binary heap tot num ops ratio: " << ((float) tot_num_ops2) / (num_ops_relax2 + num_ops_decrease_key2 + num_ops_extract_min2 + num_ops_v_overhead2 + num_ops_e_overhead2) << std::endl;
     std::cout << std::endl;

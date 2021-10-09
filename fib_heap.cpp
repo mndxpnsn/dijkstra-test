@@ -597,11 +597,6 @@ std::vector<int> reorder_results(FibHeap* H, int n, int s, node** node_refs) {
 
 std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, int s) {
 
-    //Time results
-    clock_t start_time_fib_heap, end_time_fib_heap;
-    double time;
-    start_time_fib_heap = clock();
-
     //Declarations
     FibHeap H;
     std::vector<int> results;
@@ -615,11 +610,6 @@ std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, i
 
     //Set weight matrix and create heap
     set_weight_mat_and_ref(n, edges, s, &H, weight_mat, node_refs);
-
-    //End time measurements
-    end_time_fib_heap = clock();
-    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
-    std::cout << "execution time fibonacci heap: " << time << std::endl;
 
     //Perform Dijkstra's algorithm
     dijkstra(&H, weight_mat, node_refs);

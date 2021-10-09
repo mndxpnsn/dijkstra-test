@@ -278,11 +278,6 @@ void populate_adj_and_weight_hr(int** adj_mat,
 
 std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
 
-    //Time results
-    clock_t start_time_fib_heap, end_time_fib_heap;
-    double time;
-    start_time_fib_heap = clock();
-
     std::vector<node*> rs_S;
 
     //Set index maps
@@ -295,11 +290,6 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
     //Populate weight and adjacency matrices and initialize heap
     populate_adj_and_weight_hr(adj_mat, weight_mat, n, edges, heap, s);
-
-    //End time measurements
-    end_time_fib_heap = clock();
-    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
-    std::cout << "execution time binary heap: " << time << std::endl;
 
     //Set heap and build heap
     Heap min_heap(n);
