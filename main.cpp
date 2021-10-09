@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
     //Declarations
     int s = 2; //Start vertex must be greater or equal to 1
     int n = 2499; //Number of vertices
-    int num_edges = 2*n; //Number of edges
+    int num_edges = 10*n; //Number of edges
 
     //Create edges
     srand(time(NULL));
@@ -151,6 +151,7 @@ int main(int argc, char* argv[]) {
     std::cout << "complexity ratio binary min heap: " << complexity_ratio2 << std::endl;
     std::cout << "fibonacci heap tot num ops ratio: " << ((float) tot_num_ops1) / (num_ops_relax1 + num_ops_decrease_key1 + num_ops_extract_min1 + num_ops_v_overhead1 + num_ops_e_overhead1) << std::endl;
     std::cout << "binary heap tot num ops ratio: " << ((float) tot_num_ops2) / (num_ops_relax2 + num_ops_decrease_key2 + num_ops_extract_min2 + num_ops_v_overhead2 + num_ops_e_overhead2) << std::endl;
+    std::cout << "total number of ops fib heap / total number of ops binary heap: " << (float) tot_num_ops1 / tot_num_ops2 << std::endl;
     std::cout << std::endl;
 
 //    //Print results based on Fibonacci heap
