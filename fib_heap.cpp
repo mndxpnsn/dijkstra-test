@@ -16,11 +16,17 @@
 #include "user_types.hpp"
 
 int tot_num_ops = 0;
+int num_ops_relax = 0;
+int num_ops_decrease_key = 0;
+int num_ops_extract_min = 0;
+int num_ops_v_overhead = 0;
+int num_ops_e_overhead = 0;
 
 bool** bool2D(const int size) {
     bool** p = new bool*[size];
 
     for(int i = 0; i < size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         p[i] = new bool[size];
     }
@@ -32,6 +38,7 @@ int** int2D(const int size) {
     int** p = new int*[size];
 
     for(int i = 0; i < size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         p[i] = new int[size];
     }
@@ -41,6 +48,7 @@ int** int2D(const int size) {
 
 void free_bool2D(bool** p, int size) {
     for(int i = 0; i < size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         delete [] p[i];
     }
@@ -50,6 +58,7 @@ void free_bool2D(bool** p, int size) {
 
 void free_int2D(int** p, int size) {
     for(int i = 0; i < size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         delete [] p[i];
     }
@@ -59,6 +68,7 @@ void free_int2D(int** p, int size) {
 
 void free_node_ref(node** v_ref, int size) {
     for(int i = 0; i < size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         delete v_ref[i];
     }
@@ -176,6 +186,7 @@ void consolidate(FibHeap* H) {
     //Allocate memory for root list construction
     node** A = new node*[D + 1];
     for(int i = 0; i < D + 1; ++i) {
+    	num_ops_extract_min++;
         tot_num_ops++;
         A[i] = NULL;
     }
@@ -188,6 +199,7 @@ void consolidate(FibHeap* H) {
             there_is_dup = false;
             x = H->min;
             do {
+            	num_ops_extract_min++;
                 tot_num_ops++;
                 link_dup_deg(H, A, x, there_is_dup);
                 x = x->right;
@@ -198,6 +210,7 @@ void consolidate(FibHeap* H) {
     //Reconstruct root list
     H->min = NULL;
     for(int i = 0; i < D + 1; ++i) {
+    	num_ops_extract_min++;
         tot_num_ops++;
         if(A[i] != NULL) {
             if(H->min == NULL) {
@@ -323,6 +336,8 @@ void nullify_children_parent_node(node* z) {
     node* xt = z->child;
     if(xt != NULL) {
         do {
+        	num_ops_extract_min++;
+        	tot_num_ops++;
             xt->p = NULL;
             xt = xt->right;
         } while(xt != z->child);
@@ -411,6 +426,8 @@ void cut(FibHeap* H, node* x, node* y) {
 }
 
 void cascading_cut(FibHeap* H, node* y) {
+	num_ops_decrease_key++;
+	tot_num_ops++;
     node* z = y->p;
     if(z != NULL) {
         if(y->mark == false) {
@@ -470,6 +487,7 @@ void set_weight_mat_and_ref(int size_graph,
 
     //Initialize and construct heap
     for(int i = 0; i < size_graph; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         node_refs[i] = new node;
         node_refs[i]->key = inf;
@@ -483,6 +501,7 @@ void set_weight_mat_and_ref(int size_graph,
     //Set weight  matrix and adjacent nodes
     int num_edges = (int) edges.size();
     for(int i = 0; i < num_edges; ++i) {
+    	num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0] - 1;
         int end_index = edges[i][1] - 1;
@@ -500,6 +519,7 @@ void set_weight_mat_and_ref(int size_graph,
 
     //Traverse edges again to pick minimum weights
     for(int i = 0; i < num_edges; ++i) {
+    	num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0] - 1;
         int end_index = edges[i][1] - 1;
@@ -546,6 +566,7 @@ void dijkstra(FibHeap* H, int** w, node** node_refs) {
 
         int num_adj_nodes = (int) u->adj_nodes.size();
         for(int i = 0; i < num_adj_nodes; ++i) {
+        	num_ops_relax++;
             tot_num_ops++;
             int index_ref = u->adj_nodes[i];
             node* v = node_refs[index_ref];
@@ -558,6 +579,7 @@ std::vector<int> reorder_results(FibHeap* H, int n, int s, node** node_refs) {
 
     std::vector<int> results;
     for(int i = 0; i < n; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         if(i != s) {
             int index = map_index(n, i, s);
@@ -575,6 +597,11 @@ std::vector<int> reorder_results(FibHeap* H, int n, int s, node** node_refs) {
 
 std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, int s) {
 
+    //Time results
+    clock_t start_time_fib_heap, end_time_fib_heap;
+    double time;
+    start_time_fib_heap = clock();
+
     //Declarations
     FibHeap H;
     std::vector<int> results;
@@ -588,6 +615,11 @@ std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, i
 
     //Set weight matrix and create heap
     set_weight_mat_and_ref(n, edges, s, &H, weight_mat, node_refs);
+
+    //End time measurements
+    end_time_fib_heap = clock();
+    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
+    std::cout << "execution time fibonacci heap: " << time << std::endl;
 
     //Perform Dijkstra's algorithm
     dijkstra(&H, weight_mat, node_refs);

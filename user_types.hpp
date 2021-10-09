@@ -14,6 +14,11 @@ const int SETVAR = 314159;
 const int INF = 3e+8;
 const int inf = 3e+8;
 extern int tot_num_ops;
+extern int num_ops_relax;
+extern int num_ops_decrease_key;
+extern int num_ops_extract_min;
+extern int num_ops_v_overhead;
+extern int num_ops_e_overhead;
 
 typedef struct FibHeapProperties {
     bool deg_is_num_child;

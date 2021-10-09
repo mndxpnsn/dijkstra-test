@@ -23,6 +23,7 @@ Heap::Heap(int size) {
     size_array = size + 1;
     element_map[0] = 0;
     for(int i = 1; i <= heap_size; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         element_map[i] = i;
         A[i] = new node;
@@ -66,7 +67,6 @@ int Heap::get_root_index() {
     return A[1]->index;
 }
 
-int num_ops_extract_min = 0;
 void Heap::min_heapify(node* A[], int i) {
     num_ops_extract_min++;
     tot_num_ops++;
@@ -104,6 +104,7 @@ void Heap::build_min_heap() {
 
 void Heap::set_heap(node* B[]) {
     for(int i = 1; i < heap_size + 1; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         A[i] = B[i];
     }
@@ -168,8 +169,6 @@ node* Heap::heap_extract_min() {
     return min;
 }
 
-int num_ops_relax = 0;
-
 void Heap::heap_decrease_key(int index, double key) {
     if(key > A[index]->key) {
         printf("new key is larger than current key\n");
@@ -178,7 +177,7 @@ void Heap::heap_decrease_key(int index, double key) {
         A[index]->key = key;
         while(index > 1 && A[parent(index)]->key > A[index]->key) {
             tot_num_ops++;
-            num_ops_relax++;
+            num_ops_decrease_key++;
             element_map[A[index]->index] = parent(index);
             element_map[A[parent(index)]->index] = index;
 
@@ -228,6 +227,7 @@ void populate_adj_and_weight_hr(int** adj_mat,
                                 int s) {
 
     for(int i = 1; i < size_graph + 1; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         heap[i] = new node;
         heap[i]->key = INF;
@@ -240,6 +240,7 @@ void populate_adj_and_weight_hr(int** adj_mat,
 
     int num_edges = edges.size();
     for(int i = 0; i < num_edges; ++i) {
+    	num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0];
         int end_index = edges[i][1];
@@ -259,6 +260,7 @@ void populate_adj_and_weight_hr(int** adj_mat,
     }
 
     for(int i = 0; i < num_edges; ++i) {
+    	num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0];
         int end_index = edges[i][1];
@@ -276,6 +278,11 @@ void populate_adj_and_weight_hr(int** adj_mat,
 
 std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
 
+    //Time results
+    clock_t start_time_fib_heap, end_time_fib_heap;
+    double time;
+    start_time_fib_heap = clock();
+
     std::vector<node*> rs_S;
 
     //Set index maps
@@ -288,6 +295,11 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
     //Populate weight and adjacency matrices and initialize heap
     populate_adj_and_weight_hr(adj_mat, weight_mat, n, edges, heap, s);
+
+    //End time measurements
+    end_time_fib_heap = clock();
+    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
+    std::cout << "execution time binary heap: " << time << std::endl;
 
     //Set heap and build heap
     Heap min_heap(n);
@@ -330,6 +342,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     std::vector<int> rs_S_reordered;
 
     for(int i = 1; i <= size_results; ++i) {
+    	num_ops_v_overhead++;
         tot_num_ops++;
         int j = index_map_end[i];
         if(rs_S[j]->index_og != s) {
