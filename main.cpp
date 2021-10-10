@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
     end_time_bin_heap_ver = clock();
     time_ver2 = (double) (end_time_bin_heap_ver - start_time_bin_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
-    //Reset total number of operations counter
+    //Reset operation counters
     tot_num_ops = 0;
     num_ops_relax = 0;
     num_ops_decrease_key = 0;
@@ -99,7 +99,7 @@ int main(int argc, char* argv[]) {
     int num_ops_e_overhead1 = num_ops_e_overhead;
     int num_ops_decrease_key_verification1 = num_ops_decrease_key2;
 
-    //Reset total number of operations counter
+    //Reset operation counters
     tot_num_ops = 0;
     num_ops_relax = 0;
     num_ops_decrease_key = 0;
