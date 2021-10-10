@@ -30,7 +30,7 @@
 int main(int argc, char* argv[]) {
 
     //Declarations
-    int s = 1; //Start vertex must be greater or equal to 1
+    int s = 1; //Start vertex. The minimum index for vertices is 1
     int n = 2449; //Number of vertices
     int num_edges = 100*n; //Number of edges
 
@@ -58,10 +58,8 @@ int main(int argc, char* argv[]) {
     clock_t start_time_fib_heap_ver, end_time_fib_heap_ver;
     double time_ver;
     start_time_fib_heap_ver = clock();
-
     //Compute distances to nodes from start vertex using arrays
     std::vector<int> results_ver = shortestReach(n, edges, s);
-
     end_time_fib_heap_ver = clock();
     time_ver = (double) (end_time_fib_heap_ver - start_time_fib_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -69,10 +67,8 @@ int main(int argc, char* argv[]) {
     clock_t start_time_bin_heap_ver, end_time_bin_heap_ver;
     double time_ver2;
     start_time_bin_heap_ver = clock();
-
     //Compute distances to nodes from start vertex using priority queues
     vector<int> results_ver2 = graph.shortestPath(s - 1);
-
     end_time_bin_heap_ver = clock();
     time_ver2 = (double) (end_time_bin_heap_ver - start_time_bin_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -89,10 +85,8 @@ int main(int argc, char* argv[]) {
     clock_t start_time_fib_heap, end_time_fib_heap;
     double time;
     start_time_fib_heap = clock();
-
     //Compute distances to nodes from start vertex using a fibonacci heap
     std::vector<int> results = shortest_reach(n, edges, s);
-
     end_time_fib_heap = clock();
     time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
 
@@ -118,10 +112,8 @@ int main(int argc, char* argv[]) {
     clock_t start_time_bin_heap, end_time_bin_heap;
     double time2;
     start_time_bin_heap = clock();
-
     //Compute distances to nodes from start vertex using a binary heap
     std::vector<int> results2 = shortest_reach2(n, edges, s);
-
     end_time_bin_heap = clock();
     time2 = (double) (end_time_bin_heap - start_time_bin_heap) / CLOCKS_PER_SEC * 1000.0;
 
@@ -192,7 +184,6 @@ int main(int argc, char* argv[]) {
     std::cout << "number of operations extract min binary heap: " << num_ops_extract_min2 << std::endl;
     std::cout << "number of overhead operations fibonacci heap: " << num_ops_v_overhead1 + num_ops_e_overhead1 << std::endl;
     std::cout << "number of overhead operations binary heap: " << num_ops_v_overhead2 + num_ops_e_overhead2 << std::endl;
-
     std::cout << "number of operations decrease key verification fibonacci heap: " << num_ops_decrease_key_verification1 << std::endl;
     std::cout << "number of operations decrease key verification binary heap: " << num_ops_decrease_key_verification2 << std::endl;
     std::cout << "number of operations extract min / VlgV, fibonacci heap: " << (float) num_ops_extract_min1/(n * log(n)/log(2)) << std::endl;
