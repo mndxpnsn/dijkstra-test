@@ -1,8 +1,6 @@
 /*
- * fib_heap_comp.cpp
- *
- *  Created on: 9 Oct 2021
- *      Author: derekharrison
+ * Implementation of Dijkstra's algorithm
+ * using arrays. The code below was gotten from github
  */
 
 #include <iostream>

@@ -1,8 +1,7 @@
 /*
- * bin_heap_com.cpp
- *
- *  Created on: 9 Oct 2021
- *      Author: derekharrison
+ * Implementation of Dijkstra's algorithm
+ * using priority queues. The code below
+ * was gotten from github.
  */
 
 #include "priority_queue.hpp"
