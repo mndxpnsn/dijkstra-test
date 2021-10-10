@@ -27,7 +27,7 @@ void Graph::addEdge(int u,int v,int w){
 }
 
 vector<int> Graph::shortestPath(int src){
-    //pair<peso,label>
+    //Dijkstra's algorithm
     priority_queue<myPair,vector<myPair>,greater<myPair> > pq;
     vector<int> dist(this->V,INF);
     dist[src] = 0;
