@@ -21,7 +21,6 @@ int num_ops_decrease_key = 0;
 int num_ops_extract_min = 0;
 int num_ops_v_overhead = 0;
 int num_ops_e_overhead = 0;
-int num_ops_decrease_key2 = 0;
 
 bool** bool2D(const int size) {
     bool** p = new bool*[size];
@@ -442,7 +441,6 @@ void cascading_cut(FibHeap* H, node* y) {
 }
 
 void fib_heap_decrease_key(FibHeap* H, node* x, int k) {
-	num_ops_decrease_key2++;
     if(k > x->key) {
         const char* s = "new key is greater than current key";
         std::cout << s << std::endl;

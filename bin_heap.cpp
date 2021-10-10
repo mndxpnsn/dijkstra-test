@@ -170,7 +170,6 @@ node* Heap::heap_extract_min() {
 }
 
 void Heap::heap_decrease_key(int index, double key) {
-	num_ops_decrease_key2++;
     if(key > A[index]->key) {
         printf("new key is larger than current key\n");
     }

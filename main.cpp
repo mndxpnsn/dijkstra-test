@@ -79,7 +79,6 @@ int main(int argc, char* argv[]) {
     num_ops_extract_min = 0;
     num_ops_v_overhead = 0;
     num_ops_e_overhead = 0;
-    num_ops_decrease_key2 = 0;
 
     //Time results based on Fibonacci heap
     clock_t start_time_fib_heap, end_time_fib_heap;
@@ -97,7 +96,6 @@ int main(int argc, char* argv[]) {
     int num_ops_extract_min1 = num_ops_extract_min;
     int num_ops_v_overhead1 = num_ops_v_overhead;
     int num_ops_e_overhead1 = num_ops_e_overhead;
-    int num_ops_decrease_key_verification1 = num_ops_decrease_key2;
 
     //Reset operation counters
     tot_num_ops = 0;
@@ -106,7 +104,6 @@ int main(int argc, char* argv[]) {
     num_ops_extract_min = 0;
     num_ops_v_overhead = 0;
     num_ops_e_overhead = 0;
-    num_ops_decrease_key2 = 0;
 
     //Time results based on binary heap
     clock_t start_time_bin_heap, end_time_bin_heap;
@@ -124,7 +121,6 @@ int main(int argc, char* argv[]) {
     int num_ops_extract_min2 = num_ops_extract_min;
     int num_ops_v_overhead2 = num_ops_v_overhead;
     int num_ops_e_overhead2 = num_ops_e_overhead;
-    int num_ops_decrease_key_verification2 = num_ops_decrease_key2;
 
     //Check if results of the various methods are the same
     bool results_match = true;
@@ -166,8 +162,6 @@ int main(int argc, char* argv[]) {
     std::cout << "number of operations extract min binary heap: " << num_ops_extract_min2 << std::endl;
     std::cout << "number of overhead operations fibonacci heap: " << num_ops_v_overhead1 + num_ops_e_overhead1 << std::endl;
     std::cout << "number of overhead operations binary heap: " << num_ops_v_overhead2 + num_ops_e_overhead2 << std::endl;
-    std::cout << "number of operations decrease key verification fibonacci heap: " << num_ops_decrease_key_verification1 << std::endl;
-    std::cout << "number of operations decrease key verification binary heap: " << num_ops_decrease_key_verification2 << std::endl;
     std::cout << "number of operations extract min / VlgV, fibonacci heap: " << (float) num_ops_extract_min1/(n * log(n)/log(2)) << std::endl;
     std::cout << "number of operations extract min / VlgV, binary heap: " << (float) num_ops_extract_min2/(n * log(n)/log(2)) << std::endl;
     std::cout << std::endl;
