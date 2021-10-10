@@ -134,7 +134,7 @@ int main(int argc, char* argv[]) {
     int num_ops_e_overhead2 = num_ops_e_overhead;
     int num_ops_decrease_key_verification2 = num_ops_decrease_key2;
 
-    //Check if results of both methods are the same
+    //Check if results of the various methods are the same
     bool results_match = true;
     int size_res1 = (int) results.size();
     int size_res2 = (int) results2.size();
