@@ -139,11 +139,6 @@ int main(int argc, char* argv[]) {
     }
 
     //Print results
-    float tot_num_ops_est = 5*n + 4*num_edges + 6.4*n*log(n)/log(2);
-    float complexity_ratio = tot_num_ops1 / tot_num_ops_est;
-    float tot_num_ops_est_bin_min = 9*n + 2*num_edges + 0.9*n*log(n)/log(2) + 0.18*num_edges*log(n)/log(2);
-    float complexity_ratio2 = tot_num_ops2 / tot_num_ops_est_bin_min;
-
     std::cout << "Execution results:" << std::endl;
     std::cout << "results obtained from the various methods match: " << results_match << std::endl;
     std::cout << "timing execution arrays: " << time_ver << std::endl;
@@ -167,9 +162,7 @@ int main(int argc, char* argv[]) {
     std::cout << "number of operations extract min / VlgV, binary heap: " << (float) num_ops_extract_min2/(n * log(n)/log(2)) << std::endl;
     std::cout << std::endl;
 
-    std::cout << "Complexity and total number of operations ratios:" << std::endl;
-    std::cout << "complexity ratio fibonacci heap: " << complexity_ratio << std::endl;
-    std::cout << "complexity ratio binary min heap: " << complexity_ratio2 << std::endl;
+    std::cout << "Total number of operations ratios:" << std::endl;
     std::cout << "fibonacci heap tot num ops ratio: " << ((float) tot_num_ops1) / (num_ops_relax1 + num_ops_decrease_key1 + num_ops_extract_min1 + num_ops_v_overhead1 + num_ops_e_overhead1) << std::endl;
     std::cout << "binary heap tot num ops ratio: " << ((float) tot_num_ops2) / (num_ops_relax2 + num_ops_decrease_key2 + num_ops_extract_min2 + num_ops_v_overhead2 + num_ops_e_overhead2) << std::endl;
     std::cout << "total number of ops fib heap / total number of ops binary heap: " << (float) tot_num_ops1 / tot_num_ops2 << std::endl;
