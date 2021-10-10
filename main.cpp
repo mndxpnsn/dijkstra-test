@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
 
     //Declarations
     int s = 1; //Start vertex. The minimum index for vertices is 1
-    int n = 2449; //Number of vertices
-    int num_edges = 100*n; //Number of edges
+    int n = 124499; //Number of vertices
+    int num_edges = 1*n; //Number of edges
 
     //Initialize graph for priority queue implementation
     Graph graph(n);
@@ -60,7 +60,8 @@ int main(int argc, char* argv[]) {
     double time_ver;
     start_time_fib_heap_ver = clock();
     //Compute distances to nodes from start vertex using arrays
-    std::vector<int> results_ver = shortestReach(n, edges, s);
+    std::vector<int> results_ver;
+//    results_ver = shortestReach(n, edges, s);
     end_time_fib_heap_ver = clock();
     time_ver = (double) (end_time_fib_heap_ver - start_time_fib_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -130,11 +131,11 @@ int main(int argc, char* argv[]) {
     int size_ver = (int) results_ver.size();
     int size_ver2 = (int) results_ver2.size();
     if(size_res1 != size_res2) { results_match = false; }
-    if(size_res2 != size_ver) { results_match = false; }
+//    if(size_res2 != size_ver) { results_match = false; }
     if(size_res1 != size_ver2) { results_match = false; }
     for(int i = 0; i < size_res1; ++i) {
         if(results[i] != results2[i]) { results_match = false; }
-        if(results2[i] != results_ver[i]) { results_match = false; }
+//        if(results2[i] != results_ver[i]) { results_match = false; }
         if(results[i] != results_ver2[i]) { results_match = false; }
     }
 
