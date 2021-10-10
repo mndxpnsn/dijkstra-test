@@ -51,6 +51,7 @@ int main(int argc, char* argv[]) {
         edge_elem.push_back(weight);
         edges.push_back(edge_elem);
 
+        //Add edge to priority queue
         graph.addEdge(start_vert-1, end_vert-1, weight);
     }
 
