@@ -136,15 +136,9 @@ int main(int argc, char* argv[]) {
     if(size_res2 != size_ver) { results_match = false; }
     if(size_res1 != size_ver2) { results_match = false; }
     for(int i = 0; i < size_res1; ++i) {
-        if(results[i] != results2[i]) {
-            results_match = false;
-        }
-        if(results2[i] != results_ver[i]) {
-            results_match = false;
-        }
-        if(results[i] != results_ver2[i]) {
-            results_match = false;
-        }
+        if(results[i] != results2[i]) { results_match = false; }
+        if(results2[i] != results_ver[i]) { results_match = false; }
+        if(results[i] != results_ver2[i]) { results_match = false; }
     }
 
     //Print results
@@ -159,18 +153,6 @@ int main(int argc, char* argv[]) {
     std::cout << "timing execution priority queue: " << time_ver2 << std::endl;
     std::cout << "timing execution fibonacci heap: " << time << std::endl;
     std::cout << "timing execution binary heap: " << time2 << std::endl;
-    std::cout << std::endl;
-
-    std::cout << "Estimations number of operations:" << std::endl;
-    std::cout << "number of operations estimated fibonacci heap 5V + 4E + 6.4VlgV: " << tot_num_ops_est << std::endl;
-    std::cout << "5V: " << 5*n << std::endl;
-    std::cout << "4E: " << 4*num_edges << std::endl;
-    std::cout << "6.4VlgV: " << 6.4*n*log(n)/log(2) << std::endl;
-    std::cout << "number of operations estimated binary heap 9V + 2E + 0.9VlgV + 0.18ElgV: " << tot_num_ops_est_bin_min << std::endl;
-    std::cout << "6V: " << 6*n << std::endl;
-    std::cout << "2E: " << 2*num_edges << std::endl;
-    std::cout << "0.9VlgV: " << 0.9*n*log(n)/log(2) << std::endl;
-    std::cout << "0.18ElgV: " << 0.18*num_edges*log(n)/log(2) << std::endl;
     std::cout << std::endl;
 
     std::cout << "Measurements number of operations:" << std::endl;
@@ -188,7 +170,6 @@ int main(int argc, char* argv[]) {
     std::cout << "number of operations decrease key verification binary heap: " << num_ops_decrease_key_verification2 << std::endl;
     std::cout << "number of operations extract min / VlgV, fibonacci heap: " << (float) num_ops_extract_min1/(n * log(n)/log(2)) << std::endl;
     std::cout << "number of operations extract min / VlgV, binary heap: " << (float) num_ops_extract_min2/(n * log(n)/log(2)) << std::endl;
-
     std::cout << std::endl;
 
     std::cout << "Complexity and total number of operations ratios:" << std::endl;
@@ -214,16 +195,17 @@ int main(int argc, char* argv[]) {
 //    }
 //    std::cout << std::endl;
 //
-//    //Print results based on priority queue
+//    //Print results based on arrays
 //    int size_results_ver = (int) results_ver.size();
 //    for(int i = 0; i < size_results_ver; ++i) {
 //        std::cout << results_ver[i] << " ";
 //    }
 //    std::cout << std::endl;
 //
-//    //Print single-source shortest paths
-//    for(int i = 0; i < n; i++){
-//        cout << results_ver2[i] << " ";
+//    //Print results based on priority queues
+//    int size_results_ver2 = (int) results_ver2.size();
+//    for(int i = 0; i < size_results_ver2; i++){
+//        std::cout << results_ver2[i] << " ";
 //    }
 //    std::cout << std::endl;
 
