@@ -144,7 +144,7 @@ int main(int argc, char* argv[]) {
     float complexity_ratio2 = tot_num_ops2 / tot_num_ops_est_bin_min;
 
     std::cout << "Execution results:" << std::endl;
-    std::cout << "results obtained from binary heap and fibonacci heap match: " << results_match << std::endl;
+    std::cout << "results obtained from the various methods match: " << results_match << std::endl;
     std::cout << "timing execution arrays: " << time_ver << std::endl;
     std::cout << "timing execution priority queue: " << time_ver2 << std::endl;
     std::cout << "timing execution fibonacci heap: " << time << std::endl;
@@ -152,8 +152,8 @@ int main(int argc, char* argv[]) {
     std::cout << std::endl;
 
     std::cout << "Measurements number of operations:" << std::endl;
-    std::cout << "number of operations measured fibonacci heap: " << tot_num_ops1 << std::endl;
-    std::cout << "number of operations measured binary heap: " << tot_num_ops2 << std::endl;
+    std::cout << "total number of operations measured fibonacci heap: " << tot_num_ops1 << std::endl;
+    std::cout << "total number of operations measured binary heap: " << tot_num_ops2 << std::endl;
     std::cout << "number of operations relax fibonacci heap: " << num_ops_relax1 << std::endl;
     std::cout << "number of operations relax binary heap: " << num_ops_relax2 << std::endl;
     std::cout << "number of operations decrease key fibonacci heap: " << num_ops_decrease_key1 << std::endl;
