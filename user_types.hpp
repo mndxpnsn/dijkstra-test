@@ -2,7 +2,7 @@
  * user_types.hpp
  *
  *  Created on: 7 Oct 2021
- *      Author: derekharrison
+ *      Author: mndx
  */
 
 #ifndef USER_TYPES_HPP_
@@ -41,8 +41,7 @@ typedef struct Node {
 
     int index_og;
     Node* pi;
-
-	Node *parent;         // Parent Pointer
+	Node *parent;
 } node;
 
 class FibHeap {

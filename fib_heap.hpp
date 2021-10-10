@@ -2,7 +2,7 @@
  * fib_heap.hpp
  *
  *  Created on: 7 Oct 2021
- *      Author: derekharrison
+ *      Author: mndx
  */
 
 #ifndef FIB_HEAP_HPP_

@@ -2,11 +2,11 @@
  * main.cpp
  *
  *  Created on: 30 Sep 2021
- *      Author: derekharrison
+ *      Author: mndx
  *
- *      Compare complexity of Dijkstra's algorithm
- *      using a Fibonacci heap and a binary min
- *      heap.
+ *      Compare number of operations and running time
+ *      of Dijkstra's algorithm using a Fibonacci heap
+ *      and a binary min heap.
  *
  *      Also compare running time using priority queues
  *      and arrays.

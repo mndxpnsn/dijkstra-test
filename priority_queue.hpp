@@ -2,7 +2,7 @@
  * bin_heap_comp.hpp
  *
  *  Created on: 9 Oct 2021
- *      Author: derekharrison
+ *      Author: mndx
  */
 
 #ifndef PRIORITY_QUEUE_HPP_
