@@ -4,13 +4,12 @@
  * was gotten from github.
  */
 
-#include "priority_queue.hpp"
-
 #include <iostream>
 #include <vector>
 #include <queue>
 #include <list>
 
+#include "priority_queue.hpp"
 
 #define INF 0x3f3f3f3f
 using namespace std;
@@ -19,13 +18,14 @@ Graph::Graph(int V){
     this->V = V;
     adj = new list<myPair>[this->V];
 }
+
 void Graph::addEdge(int u,int v,int w){
     //adj[u].push_back(makepair(v,w));
     //adj[v].push_back(makepair(u,w));
     adj[u].push_back({v,w});
     adj[v].push_back({u,w});
 }
-//Dijkstra
+
 vector<int> Graph::shortestPath(int src){
     //pair<peso,label>
     priority_queue<myPair,vector<myPair>,greater<myPair> > pq;
@@ -52,13 +52,13 @@ vector<int> Graph::shortestPath(int src){
     //Print single-source shortest paths
     for(int i=0;i<this->V;i++){
         if(i != src) {
-        	int distance = dist[i];
-        	if(distance == INF) {
-        		result.push_back(-1);
-        	}
-        	else {
-        		result.push_back(distance);
-        	}
+            int distance = dist[i];
+            if(distance == INF) {
+                result.push_back(-1);
+            }
+            else {
+                result.push_back(distance);
+            }
         }
     }
 
