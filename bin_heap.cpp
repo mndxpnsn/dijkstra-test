@@ -170,6 +170,7 @@ node* Heap::heap_extract_min() {
 }
 
 void Heap::heap_decrease_key(int index, double key) {
+	num_ops_decrease_key2++;
     if(key > A[index]->key) {
         printf("new key is larger than current key\n");
     }
@@ -191,6 +192,7 @@ void Heap::heap_decrease_key(int index, double key) {
 }
 
 void relax(node* u, node* v, int** w, Heap* heap) {
+
     int index_in_heap = heap->get_heap_index(v->index);
     if(v->key > u->key + w[u->index][v->index]) {
         int weight = u->key + w[u->index][v->index];

@@ -19,6 +19,7 @@ extern int num_ops_decrease_key;
 extern int num_ops_extract_min;
 extern int num_ops_v_overhead;
 extern int num_ops_e_overhead;
+extern int num_ops_decrease_key2;
 
 typedef struct FibHeapProperties {
     bool deg_is_num_child;
@@ -40,6 +41,8 @@ typedef struct Node {
 
     int index_og;
     Node* pi;
+
+	Node *parent;         // Parent Pointer
 } node;
 
 class FibHeap {
