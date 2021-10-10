@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
     int n = 2449; //Number of vertices
     int num_edges = 100*n; //Number of edges
 
-    //Initialize graph for running time comparison
+    //Initialize graph for priority queue implementation
     Graph graph(n);
 
     //Create edges
