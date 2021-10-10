@@ -48,8 +48,8 @@ vector<int> Graph::shortestPath(int src){
         }
     }
 
+    //Set results
     vector<int> result;
-    //Print single-source shortest paths
     for(int i=0;i<this->V;i++){
         if(i != src) {
             int distance = dist[i];
