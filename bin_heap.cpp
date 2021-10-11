@@ -110,12 +110,6 @@ void Heap::set_heap(node* B[]) {
     }
 }
 
-void Heap::get_heap(node B[]) {
-    for(int i = 1; i < heap_size + 1; ++i) {
-        B[i] = *A[i];
-    }
-}
-
 int Heap::get_heap_size() {
     return heap_size;
 }
@@ -281,7 +275,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
     std::vector<node*> rs_S;
 
-    //Set index maps
+    //Set index map
     int* index_map_end = new int[n+1];
 
     //Initialize weight and adjacency matrices and binary min heap

@@ -68,7 +68,6 @@ public:
     ~Heap();
 
     void set_heap(node* B[]);
-    void get_heap(node B[]);
     int get_heap_size();
     node* heap_extract_min();
     void heap_decrease_key(int index, double key);

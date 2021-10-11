@@ -31,8 +31,8 @@ int main(int argc, char* argv[]) {
 
     //Declarations
     int s = 1; //Start vertex. The minimum index for vertices is 1
-    int n = 2449; //Number of vertices
-    int num_edges = 100*n; //Number of edges
+    int n = 2499; //Number of vertices
+    int num_edges = 1*n; //Number of edges
 
     //Initialize graph for priority queue implementation
     Graph graph(n);
@@ -60,7 +60,8 @@ int main(int argc, char* argv[]) {
     double time_ver;
     start_time_fib_heap_ver = clock();
     //Compute distances to nodes from start vertex using arrays
-    std::vector<int> results_ver = shortestReach(n, edges, s);
+    std::vector<int> results_ver;
+    results_ver = shortestReach(n, edges, s);
     end_time_fib_heap_ver = clock();
     time_ver = (double) (end_time_fib_heap_ver - start_time_fib_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -168,34 +169,34 @@ int main(int argc, char* argv[]) {
     std::cout << "total number of ops fib heap / total number of ops binary heap: " << (float) tot_num_ops1 / tot_num_ops2 << std::endl;
     std::cout << std::endl;
 
-//    //Print results based on Fibonacci heap
-//    std::cout << "Shortest distances from start vertex:" << std::endl;
-//    int size_results = (int) results.size();
-//    for(int i = 0; i < size_results; ++i) {
-//        std::cout << results[i] << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    //Print results based on binary heap
-//    int size_results2 = (int) results2.size();
-//    for(int i = 0; i < size_results2; ++i) {
-//        std::cout << results2[i] << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    //Print results based on arrays
-//    int size_results_ver = (int) results_ver.size();
-//    for(int i = 0; i < size_results_ver; ++i) {
-//        std::cout << results_ver[i] << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    //Print results based on priority queues
-//    int size_results_ver2 = (int) results_ver2.size();
-//    for(int i = 0; i < size_results_ver2; i++){
-//        std::cout << results_ver2[i] << " ";
-//    }
-//    std::cout << std::endl;
+    //Print results based on Fibonacci heap
+    std::cout << "Shortest distances from start vertex:" << std::endl;
+    int size_results = (int) results.size();
+    for(int i = 0; i < size_results; ++i) {
+        std::cout << results[i] << " ";
+    }
+    std::cout << std::endl;
+
+    //Print results based on binary heap
+    int size_results2 = (int) results2.size();
+    for(int i = 0; i < size_results2; ++i) {
+        std::cout << results2[i] << " ";
+    }
+    std::cout << std::endl;
+
+    //Print results based on arrays
+    int size_results_ver = (int) results_ver.size();
+    for(int i = 0; i < size_results_ver; ++i) {
+        std::cout << results_ver[i] << " ";
+    }
+    std::cout << std::endl;
+
+    //Print results based on priority queues
+    int size_results_ver2 = (int) results_ver2.size();
+    for(int i = 0; i < size_results_ver2; i++){
+        std::cout << results_ver2[i] << " ";
+    }
+    std::cout << std::endl;
 
     std::cout << "done" << std::endl;
 
