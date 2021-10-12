@@ -8,6 +8,8 @@
 #ifndef FIB_HEAP_SUPPORT_HPP_
 #define FIB_HEAP_SUPPORT_HPP_
 
+#include <vector>
+
 #include "user_types.hpp"
 
 void print_root_list(node* z);

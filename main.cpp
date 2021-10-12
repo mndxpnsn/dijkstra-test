@@ -70,7 +70,8 @@ int main(int argc, char* argv[]) {
     double time_ver2;
     start_time_bin_heap_ver = clock();
     //Compute distances to nodes from start vertex using priority queues
-    vector<int> results_ver2 = graph.shortestPath(s - 1);
+    vector<int> results_ver2;
+    results_ver2 = graph.shortestPath(s - 1);
     end_time_bin_heap_ver = clock();
     time_ver2 = (double) (end_time_bin_heap_ver - start_time_bin_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 

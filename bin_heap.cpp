@@ -13,7 +13,7 @@
 #include <time.h>
 #include <vector>
 
-#include "fib_heap.hpp"
+#include "memory.hpp"
 #include "user_types.hpp"
 
 Heap::Heap(int size) {
@@ -216,12 +216,11 @@ int map_inverse(int n, int index, int s) {
     return r;
 }
 
-void populate_adj_and_weight_hr(int** adj_mat,
-                                int** weight_mat,
-                                int size_graph,
-                                std::vector< std::vector<int> > &edges,
-                                node** heap,
-                                int s) {
+void set_weight_and_heap_refs(int** weight_mat,
+                              int size_graph,
+                              std::vector< std::vector<int> > &edges,
+                              node** heap,
+                              int s) {
 
     for(int i = 1; i < size_graph + 1; ++i) {
     	num_ops_v_overhead++;
@@ -251,9 +250,6 @@ void populate_adj_and_weight_hr(int** adj_mat,
 
         weight_mat[start][end] = weight;
         weight_mat[end][start] = weight;
-
-        adj_mat[start][end] = SETVAR;
-        adj_mat[end][start] = SETVAR;
     }
 
     for(int i = 0; i < num_edges; ++i) {
@@ -273,29 +269,14 @@ void populate_adj_and_weight_hr(int** adj_mat,
     }
 }
 
-std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
-
-    std::vector<node*> rs_S;
-
-    //Set index map
-    int* index_map_end = new int[n+1];
-
-    //Initialize weight and adjacency matrices and binary min heap
-    node** heap = new node*[n + 1];
-    int** adj_mat = int2D(n + 1);
-    int** weight_mat = int2D(n + 1);
-
-    //Populate weight and adjacency matrices and initialize heap
-    populate_adj_and_weight_hr(adj_mat, weight_mat, n, edges, heap, s);
-
+void dijkstra(int size_graph, int** weight_mat, node** node_refs) {
     //Set heap and build heap
-    Heap min_heap(n);
-    min_heap.set_heap(heap);
+    Heap min_heap(size_graph);
+    min_heap.set_heap(node_refs);
     min_heap.build_min_heap();
 
     //Perform Dijkstra's algorithm
     int heap_size = min_heap.get_heap_size();
-    int rs_elem_counter = 0;
     while(heap_size > 0) {
 
         node* u = min_heap.heap_extract_min();
@@ -309,32 +290,42 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
             node* v = min_heap.heap_ref[it];
             relax(u, v, weight_mat, &min_heap);
         }
-
-        rs_S.push_back(u);
-        index_map_end[u->index_og] = rs_elem_counter;
-        rs_elem_counter++;
     }
+}
 
-    //Reorder results
-    int size_results = rs_S.size();
-    std::vector<int> rs_S_reordered;
+void reorder_results_bin(int n, int s, node** node_refs, std::vector<int>& results) {
 
-    for(int i = 1; i <= size_results; ++i) {
-    	num_ops_v_overhead++;
+    for(int i = 1; i <= n; ++i) {
+        num_ops_v_overhead++;
         tot_num_ops++;
-        int j = index_map_end[i];
-        if(rs_S[j]->index_og != s) {
-            int key = rs_S[j]->key;
+        if(node_refs[i]->index != s) {
+            int key = node_refs[i]->key;
             if(key == INF) { key = -1; }
-            rs_S_reordered.push_back(key);
+            results.push_back(key);
         }
     }
+}
+
+std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
+
+	std::vector<int> results;
+
+    //Initialize weight and adjacency matrices and binary min heap
+    node** node_refs = new node*[n + 1];
+    int** weight_mat = int2D(n + 1);
+
+    //Populate weight matrix and initialize heap
+    set_weight_and_heap_refs(weight_mat, n, edges, node_refs, s);
+
+    //Perform Dijkstra's algorithm
+    dijkstra(n, weight_mat, node_refs);
+
+    //Reorder results
+    reorder_results_bin(n, s, node_refs, results);
 
     //Deallocate memory
-    free_int2D(adj_mat, n + 1);
     free_int2D(weight_mat, n + 1);
-    delete [] heap;
-    delete [] index_map_end;
+    delete [] node_refs;
 
-    return rs_S_reordered;
+    return results;
 }

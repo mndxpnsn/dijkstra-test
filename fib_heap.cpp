@@ -379,24 +379,17 @@ void dijkstra(FibHeap* H, int** w, node** node_refs) {
     }
 }
 
-std::vector<int> reorder_results(FibHeap* H, int n, int s, node** node_refs) {
+void reorder_results(int n, int s, node** node_refs, std::vector<int>& results) {
 
-    std::vector<int> results;
     for(int i = 0; i < n; ++i) {
         num_ops_v_overhead++;
         tot_num_ops++;
-        if(i != s) {
-            int index = map_index(n, i, s);
-            if(node_refs[index]->key == inf) {
-                results.push_back(-1);
-            }
-            else {
-                results.push_back(node_refs[index]->key);
-            }
+        if(node_refs[i]->index != s) {
+            int key = node_refs[i]->key;
+            if(key == INF) { key = -1; }
+            results.push_back(key);
         }
     }
-
-    return results;
 }
 
 std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, int s) {
@@ -419,7 +412,7 @@ std::vector<int> shortest_reach(int n, std::vector< std::vector<int> >& edges, i
     dijkstra(&H, weight_mat, node_refs);
 
     //Reorder results
-    results = reorder_results(&H, n, s, node_refs);
+    reorder_results(n, s, node_refs, results);
 
     //Deallocate memory
     free_int2D(weight_mat, n);
