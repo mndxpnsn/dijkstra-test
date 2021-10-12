@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     Graph graph(n);
 
     //Create edges
-    srand(time(NULL));
+    srand((unsigned) time(NULL));
     std::vector< std::vector<int> > edges;
     for(int i = 0; i < num_edges; ++i) {
         int start_vert = rand() % n + 1;

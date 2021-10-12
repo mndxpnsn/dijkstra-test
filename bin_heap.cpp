@@ -33,10 +33,7 @@ Heap::Heap(int size) {
     }
 }
 
-Heap::~Heap() {
-    delete [] A;
-    delete [] element_map;
-}
+Heap::~Heap() {}
 
 int Heap::parent(int i) {
     return i/2;
@@ -237,7 +234,7 @@ void set_weight_and_heap_refs(int size_graph,
     min_heap.build_min_heap();
 
     //Set weight matrix
-    int num_edges = edges.size();
+    int num_edges = (int) edges.size();
     for(int i = 0; i < num_edges; ++i) {
         num_ops_e_overhead++;
         tot_num_ops++;
@@ -282,7 +279,7 @@ void dijkstra(Heap* min_heap, int** weight_mat, node** node_refs) {
         node* u = min_heap->heap_extract_min();
         heap_size = min_heap->get_heap_size();
 
-        int num_adj_nodes = u->adj_nodes.size();
+        int num_adj_nodes = (int) u->adj_nodes.size();
         for(int i = 0; i < num_adj_nodes; ++i) {
             tot_num_ops++;
             num_ops_relax++;
