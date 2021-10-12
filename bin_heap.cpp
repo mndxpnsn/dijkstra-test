@@ -24,7 +24,7 @@ Heap::Heap(int size) {
     size_array = size + 1;
     element_map[0] = 0;
     for(int i = 1; i <= heap_size; ++i) {
-    	num_ops_v_overhead++;
+        num_ops_v_overhead++;
         tot_num_ops++;
         element_map[i] = i;
         A[i] = new node;
@@ -34,12 +34,8 @@ Heap::Heap(int size) {
 }
 
 Heap::~Heap() {
-//    for(int i = 1; i < size_array - 1; ++i) {
-//        delete A[i];
-//    }
-//
-//    delete [] A;
-//    delete [] element_map;
+    delete [] A;
+    delete [] element_map;
 }
 
 int Heap::parent(int i) {
@@ -105,7 +101,7 @@ void Heap::build_min_heap() {
 
 void Heap::set_heap(node* B[]) {
     for(int i = 1; i < heap_size + 1; ++i) {
-    	num_ops_v_overhead++;
+        num_ops_v_overhead++;
         tot_num_ops++;
         A[i] = B[i];
         heap_ref[i] = A[i];
@@ -217,15 +213,15 @@ int map_inverse(int n, int index, int s) {
 }
 
 void set_weight_and_heap_refs(int size_graph,
-		                      std::vector< std::vector<int> > &edges,
-							  int s,
-							  Heap* min_heap,
-							  int** weight_mat,
-							  node** node_refs) {
+                              std::vector< std::vector<int> > &edges,
+                              int s,
+                              Heap& min_heap,
+                              int** weight_mat,
+                              node** node_refs) {
 
-	//Initialize node references
+    //Initialize node references
     for(int i = 1; i < size_graph + 1; ++i) {
-    	num_ops_v_overhead++;
+        num_ops_v_overhead++;
         tot_num_ops++;
         node_refs[i] = new node;
         node_refs[i]->key = INF;
@@ -237,13 +233,13 @@ void set_weight_and_heap_refs(int size_graph,
     node_refs[1]->key = 0;
 
     //Set and build heap
-    min_heap->set_heap(node_refs);
-    min_heap->build_min_heap();
+    min_heap.set_heap(node_refs);
+    min_heap.build_min_heap();
 
     //Set weight matrix
     int num_edges = edges.size();
     for(int i = 0; i < num_edges; ++i) {
-    	num_ops_e_overhead++;
+        num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0];
         int end_index = edges[i][1];
@@ -261,7 +257,7 @@ void set_weight_and_heap_refs(int size_graph,
 
     //Traverse edges again to pick minimum weights
     for(int i = 0; i < num_edges; ++i) {
-    	num_ops_e_overhead++;
+        num_ops_e_overhead++;
         tot_num_ops++;
         int start_index = edges[i][0];
         int end_index = edges[i][1];
@@ -312,15 +308,15 @@ void reorder_results_bin(int n, int s, node** node_refs, std::vector<int>& resul
 
 std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s) {
 
-	std::vector<int> results;
+    std::vector<int> results;
 
     //Initialize weight and adjacency matrices and binary min heap
-	Heap min_heap(n);
+    Heap min_heap(n);
     node** node_refs = new node*[n + 1];
     int** weight_mat = int2D(n + 1);
 
     //Populate weight matrix and initialize heap
-    set_weight_and_heap_refs(n, edges, s, &min_heap, weight_mat, node_refs);
+    set_weight_and_heap_refs(n, edges, s, min_heap, weight_mat, node_refs);
 
     //Perform Dijkstra's algorithm
     dijkstra(&min_heap, weight_mat, node_refs);

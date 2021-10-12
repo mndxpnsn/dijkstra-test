@@ -10,6 +10,8 @@
 
 #include <vector>
 
+#include "user_types.hpp"
+
 std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, int s);
 
 #endif /* BIN_HEAP_HPP_ */
