@@ -20,8 +20,6 @@ Graph::Graph(int V){
 }
 
 void Graph::addEdge(int u,int v,int w){
-    //adj[u].push_back(makepair(v,w));
-    //adj[v].push_back(makepair(u,w));
     adj[u].push_back({v,w});
     adj[v].push_back({u,w});
 }

@@ -19,6 +19,7 @@
 Heap::Heap(int size) {
     heap_size = size;
     A = new node*[size+1];
+    heap_ref = new node*[size+1];
     element_map = new int[size+1];
     size_array = size + 1;
     element_map[0] = 0;
@@ -107,6 +108,7 @@ void Heap::set_heap(node* B[]) {
     	num_ops_v_overhead++;
         tot_num_ops++;
         A[i] = B[i];
+        heap_ref[i] = A[i];
     }
 }
 
@@ -299,22 +301,13 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
         node* u = min_heap.heap_extract_min();
         heap_size = min_heap.get_heap_size();
 
-        int u_index = u->index;
         int num_adj_nodes = u->adj_nodes.size();
-
         for(int i = 0; i < num_adj_nodes; ++i) {
             tot_num_ops++;
             num_ops_relax++;
             int it = u->adj_nodes[i];
-            node* v = min_heap.get_heap_element(it);
-            int v_index = v->index;
-
-            //Extracted nodes always point to node 1 in the heap,
-            //and the node at 1 may not be an adjacent node
-            //Therefore adjacency must be verified with adj_mat
-            if(adj_mat[u_index][v_index] == SETVAR) {
-                relax(u, v, weight_mat, &min_heap);
-            }
+            node* v = min_heap.heap_ref[it];
+            relax(u, v, weight_mat, &min_heap);
         }
 
         rs_S.push_back(u);
