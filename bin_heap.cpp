@@ -34,7 +34,7 @@ Heap::Heap(int size) {
 }
 
 Heap::~Heap() {
-//    for(int i = 0; i < size_array; ++i) {
+//    for(int i = 1; i < size_array - 1; ++i) {
 //        delete A[i];
 //    }
 //
@@ -216,24 +216,31 @@ int map_inverse(int n, int index, int s) {
     return r;
 }
 
-void set_weight_and_heap_refs(int** weight_mat,
-                              int size_graph,
-                              std::vector< std::vector<int> > &edges,
-                              node** heap,
-                              int s) {
+void set_weight_and_heap_refs(int size_graph,
+		                      std::vector< std::vector<int> > &edges,
+							  int s,
+							  Heap* min_heap,
+							  int** weight_mat,
+							  node** node_refs) {
 
+	//Initialize node references
     for(int i = 1; i < size_graph + 1; ++i) {
     	num_ops_v_overhead++;
         tot_num_ops++;
-        heap[i] = new node;
-        heap[i]->key = INF;
-        heap[i]->pi = NULL;
-        heap[i]->index = i;
-        heap[i]->index_og = map_inverse(size_graph, i, s);
+        node_refs[i] = new node;
+        node_refs[i]->key = INF;
+        node_refs[i]->pi = NULL;
+        node_refs[i]->index = i;
+        node_refs[i]->index_og = map_inverse(size_graph, i, s);
     }
 
-    heap[1]->key = 0;
+    node_refs[1]->key = 0;
 
+    //Set and build heap
+    min_heap->set_heap(node_refs);
+    min_heap->build_min_heap();
+
+    //Set weight matrix
     int num_edges = edges.size();
     for(int i = 0; i < num_edges; ++i) {
     	num_ops_e_overhead++;
@@ -245,13 +252,14 @@ void set_weight_and_heap_refs(int** weight_mat,
         int start = map_index2(size_graph, start_index, s);
         int end = map_index2(size_graph, end_index, s);
 
-        heap[start]->adj_nodes.push_back(end);
-        heap[end]->adj_nodes.push_back(start);
+        node_refs[start]->adj_nodes.push_back(end);
+        node_refs[end]->adj_nodes.push_back(start);
 
         weight_mat[start][end] = weight;
         weight_mat[end][start] = weight;
     }
 
+    //Traverse edges again to pick minimum weights
     for(int i = 0; i < num_edges; ++i) {
     	num_ops_e_overhead++;
         tot_num_ops++;
@@ -269,26 +277,22 @@ void set_weight_and_heap_refs(int** weight_mat,
     }
 }
 
-void dijkstra(int size_graph, int** weight_mat, node** node_refs) {
-    //Set heap and build heap
-    Heap min_heap(size_graph);
-    min_heap.set_heap(node_refs);
-    min_heap.build_min_heap();
+void dijkstra(Heap* min_heap, int** weight_mat, node** node_refs) {
 
     //Perform Dijkstra's algorithm
-    int heap_size = min_heap.get_heap_size();
+    int heap_size = min_heap->get_heap_size();
     while(heap_size > 0) {
 
-        node* u = min_heap.heap_extract_min();
-        heap_size = min_heap.get_heap_size();
+        node* u = min_heap->heap_extract_min();
+        heap_size = min_heap->get_heap_size();
 
         int num_adj_nodes = u->adj_nodes.size();
         for(int i = 0; i < num_adj_nodes; ++i) {
             tot_num_ops++;
             num_ops_relax++;
             int it = u->adj_nodes[i];
-            node* v = min_heap.heap_ref[it];
-            relax(u, v, weight_mat, &min_heap);
+            node* v = min_heap->heap_ref[it];
+            relax(u, v, weight_mat, min_heap);
         }
     }
 }
@@ -311,21 +315,22 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 	std::vector<int> results;
 
     //Initialize weight and adjacency matrices and binary min heap
+	Heap min_heap(n);
     node** node_refs = new node*[n + 1];
     int** weight_mat = int2D(n + 1);
 
     //Populate weight matrix and initialize heap
-    set_weight_and_heap_refs(weight_mat, n, edges, node_refs, s);
+    set_weight_and_heap_refs(n, edges, s, &min_heap, weight_mat, node_refs);
 
     //Perform Dijkstra's algorithm
-    dijkstra(n, weight_mat, node_refs);
+    dijkstra(&min_heap, weight_mat, node_refs);
 
     //Reorder results
     reorder_results_bin(n, s, node_refs, results);
 
     //Deallocate memory
     free_int2D(weight_mat, n + 1);
-    delete [] node_refs;
+    free_node_ref(node_refs, n + 1);
 
     return results;
 }
