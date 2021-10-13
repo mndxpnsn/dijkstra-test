@@ -202,7 +202,7 @@ int map_index2(int n, int index, int s) {
     return r;
 }
 
-int map_inverse(int n, int index, int s) {
+int map_inverse2(int n, int index, int s) {
     int r;
 
     r = s + index - 1;
@@ -228,7 +228,7 @@ void set_weight_and_heap_refs(int size_graph,
         node_refs[i]->key = INF;
         node_refs[i]->pi = NULL;
         node_refs[i]->index = i;
-        node_refs[i]->index_og = map_inverse(size_graph, i, s);
+        node_refs[i]->index_og = map_inverse2(size_graph, i, s);
     }
 
     node_refs[1]->key = 0;

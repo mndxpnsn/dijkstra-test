@@ -10,9 +10,7 @@
 
 #include <vector>
 
-const int SETVAR = 314159;
 const int INF = 3e+8;
-const int inf = 3e+8;
 extern int tot_num_ops;
 extern int num_ops_relax;
 extern int num_ops_decrease_key;

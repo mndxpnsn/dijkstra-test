@@ -303,15 +303,15 @@ int map_index(int n, int index, int s) {
     return r;
 }
 
-int map_inverse2(int n, int index, int s) {
-	int r;
+int map_inverse(int n, int index, int s) {
+    int r;
 
-	r = s + index;
-	if(r > n - 1) {
-		r = r - n;
-	}
+    r = s + index;
+    if(r > n - 1) {
+        r = r - n;
+    }
 
-	return r;
+    return r;
 }
 
 void set_weight_mat_and_ref(int size_graph,
@@ -327,9 +327,9 @@ void set_weight_mat_and_ref(int size_graph,
         num_ops_v_overhead++;
         tot_num_ops++;
         node_refs[i] = new node;
-        node_refs[i]->key = inf;
+        node_refs[i]->key = INF;
         node_refs[i]->index = i;
-        node_refs[i]->index_og = map_inverse2(size_graph, i, start_vertex);
+        node_refs[i]->index_og = map_inverse(size_graph, i, start_vertex);
         if(i == 0) {
             node_refs[i]->key = 0;
         }
