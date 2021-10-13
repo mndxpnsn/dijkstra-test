@@ -231,6 +231,7 @@ void set_weight_and_heap_refs(int size_graph,
         node_refs[i]->index_og = map_inverse2(size_graph, i, s);
     }
 
+    //Initializing start vertex
     node_refs[1]->key = 0;
 
     //Set and build heap
@@ -274,7 +275,7 @@ void set_weight_and_heap_refs(int size_graph,
     }
 }
 
-void dijkstra(Heap* min_heap, int** weight_mat, node** node_refs) {
+void dijkstra(Heap* min_heap, int** weight_mat) {
 
     //Perform Dijkstra's algorithm
     int heap_size = min_heap->get_heap_size();
@@ -317,11 +318,11 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
     node** node_refs = new node*[n + 1];
     int** weight_mat = int2D(n + 1);
 
-    //Populate weight matrix and initialize heap
+    //Populate weight matrix and initialize heap and heap references
     set_weight_and_heap_refs(n, edges, s, min_heap, weight_mat, node_refs);
 
     //Perform Dijkstra's algorithm
-    dijkstra(&min_heap, weight_mat, node_refs);
+    dijkstra(&min_heap, weight_mat);
 
     //Reorder results
     reorder_results_bin(n, s, node_refs, results);
