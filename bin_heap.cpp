@@ -33,7 +33,11 @@ Heap::Heap(int size) {
     }
 }
 
-Heap::~Heap() {}
+Heap::~Heap() {
+	delete [] A;
+	delete [] heap_ref;
+	delete [] element_map;
+}
 
 int Heap::parent(int i) {
     return i/2;
@@ -323,7 +327,7 @@ std::vector<int> shortest_reach2(int n, std::vector< std::vector<int> > &edges, 
 
     //Deallocate memory
     free_int2D(weight_mat, n + 1);
-    free_node_ref(node_refs, n + 1);
+    free_node_ref_bin(node_refs, n + 1);
 
     return results;
 }

@@ -61,4 +61,13 @@ void free_node_ref(node** v_ref, int size) {
     delete [] v_ref;
 }
 
+void free_node_ref_bin(node** v_ref, int size) {
+    for(int i = 1; i < size; ++i) {
+        num_ops_v_overhead++;
+        tot_num_ops++;
+        delete v_ref[i];
+    }
+
+    delete [] v_ref;
+}
 

@@ -15,5 +15,6 @@ int** int2D(const int size);
 void free_bool2D(bool** p, int size);
 void free_int2D(int** p, int size);
 void free_node_ref(node** v_ref, int size);
+void free_node_ref_bin(node** v_ref, int size);
 
 #endif /* MEMORY_HPP_ */
