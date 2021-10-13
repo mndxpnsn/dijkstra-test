@@ -52,8 +52,7 @@ int Heap::right(int i) {
 }
 
 node* Heap::get_heap_element(int node_index) {
-    int index_in_heap = element_map[node_index];
-    return A[index_in_heap];
+    return heap_ref[node_index];
 }
 
 int Heap::get_heap_index(int node_index) {
@@ -289,7 +288,7 @@ void dijkstra(Heap* min_heap, int** weight_mat) {
             tot_num_ops++;
             num_ops_relax++;
             int it = u->adj_nodes[i];
-            node* v = min_heap->heap_ref[it];
+            node* v = min_heap->get_heap_element(it);
             relax(u, v, weight_mat, min_heap);
         }
     }

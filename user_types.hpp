@@ -54,6 +54,7 @@ private:
     int heap_size;
     int size_array;
     node** A;
+    node** heap_ref;
     int* element_map;
 
     int parent(int i);
@@ -62,8 +63,6 @@ private:
     void min_heapify(node* A[], int i);
 
 public:
-    node** heap_ref;
-
     Heap(int size);
     ~Heap();
 
