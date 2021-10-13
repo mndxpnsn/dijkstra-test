@@ -299,8 +299,9 @@ void reorder_results_bin(int n, int s, node** node_refs, std::vector<int>& resul
     for(int i = 1; i <= n; ++i) {
         num_ops_v_overhead++;
         tot_num_ops++;
-        if(node_refs[i]->index != s) {
-            int key = node_refs[i]->key;
+        int index = map_index2(n, i, s);
+        if(node_refs[index]->index_og != s) {
+            int key = node_refs[index]->key;
             if(key == INF) { key = -1; }
             results.push_back(key);
         }

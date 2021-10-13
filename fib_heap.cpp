@@ -303,6 +303,17 @@ int map_index(int n, int index, int s) {
     return r;
 }
 
+int map_inverse2(int n, int index, int s) {
+	int r;
+
+	r = s + index;
+	if(r > n - 1) {
+		r = r - n;
+	}
+
+	return r;
+}
+
 void set_weight_mat_and_ref(int size_graph,
                             std::vector< std::vector<int> >& edges,
                             int start_vertex,
@@ -318,6 +329,7 @@ void set_weight_mat_and_ref(int size_graph,
         node_refs[i] = new node;
         node_refs[i]->key = inf;
         node_refs[i]->index = i;
+        node_refs[i]->index_og = map_inverse2(size_graph, i, start_vertex);
         if(i == 0) {
             node_refs[i]->key = 0;
         }
@@ -384,8 +396,9 @@ void reorder_results(int n, int s, node** node_refs, std::vector<int>& results) 
     for(int i = 0; i < n; ++i) {
         num_ops_v_overhead++;
         tot_num_ops++;
-        if(node_refs[i]->index != s) {
-            int key = node_refs[i]->key;
+        int index = map_index(n, i, s);
+        if(node_refs[index]->index_og != s) {
+            int key = node_refs[index]->key;
             if(key == INF) { key = -1; }
             results.push_back(key);
         }
