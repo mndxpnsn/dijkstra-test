@@ -30,9 +30,9 @@
 int main(int argc, char* argv[]) {
 
     //Declarations
-    int s = 300; //Start vertex. The minimum index for vertices is 1
+    int s = 1; //Start vertex. The minimum index for vertices is 1
     int n = 2499; //Number of vertices
-    int num_edges = 100*n; //Number of edges
+    int num_edges = 1*n; //Number of edges
 
     //Initialize graph for priority queue implementation
     Graph graph(n);

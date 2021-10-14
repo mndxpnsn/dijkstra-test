@@ -16,6 +16,20 @@
 #include "memory.hpp"
 #include "user_types.hpp"
 
+int size_root_list(node* z) {
+    int size = 0;
+
+    node* xt = z;
+    if(xt != NULL) {
+        do {
+            size++;
+            xt = xt->right;
+        } while(xt != z);
+    }
+
+    return size;
+}
+
 void print_root_list(node* z) {
     node* xt = z;
     if(xt != NULL) {

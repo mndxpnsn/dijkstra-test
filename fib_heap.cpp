@@ -72,43 +72,36 @@ void make_child_of(FibHeap* H, node* y, node* x) {
     //Set mark
     y->mark = false;
 
+    //Increment degree
     x->degree = x->degree + 1;
 }
 
-void link(FibHeap* H, node** A, node* x, node* y) {
-
+void link_dup_degree(FibHeap* H, node** A, node*& x) {
     int d = x->degree;
 
-    //Make y child of x;
-    make_child_of(H, y, x);
+    if(A[d] != x) { //Don't link nodes to themselves
+        while(A[d] != NULL) {
+            node* y = A[d];
+            //Link x and y
+            if(y->key > x->key) {
+                //Make y child of x
+                make_child_of(H, y, x);
 
-    A[d] = NULL;
-    A[d+1] = x;
+                if(y == H->min) {
+                    H->min = x;
+                }
+            }
+            else {
+                //Make x child of y
+                make_child_of(H, x, y);
 
-    if(y == H->min) {
-        H->min = x;
-    }
-}
-
-void link_dup_deg(FibHeap* H, node** A, node*& x, bool& there_is_dup) {
-    int d = x->degree;
-    //There is a node with the same degree and node is not node x
-    if(A[d] != NULL && A[d] != x) {
-        there_is_dup = true;
-        node* y = A[d];
-        //Link x and y
-        if(y->key > x->key) {
-            //Make y child of x
-            link(H, A, x, y);
+                //Reset root node and root list tracker
+                H->min = y;
+                x = H->min;
+            }
+            A[d] = NULL;
+            d = d + 1;
         }
-        else {
-            //Make x child of y
-            link(H, A, y, x);
-            x = y;
-        }
-    }
-    //There is no node with the same degree or node is node x
-    else {
         A[d] = x;
     }
 }
@@ -131,17 +124,12 @@ void consolidate(FibHeap* H) {
     //Ensure all root nodes have unique degrees
     node* x = H->min;
     if(x != NULL) {
-        bool there_is_dup = true;
-        while(there_is_dup) {
-            there_is_dup = false;
-            x = H->min;
-            do {
-                num_ops_extract_min++;
-                tot_num_ops++;
-                link_dup_deg(H, A, x, there_is_dup);
-                x = x->right;
-            } while(x != H->min);
-        }
+        do {
+            num_ops_extract_min++;
+            tot_num_ops++;
+            link_dup_degree(H, A, x);
+            x = x->right;
+        } while(x != H->min);
     }
 
     //Reconstruct root list
