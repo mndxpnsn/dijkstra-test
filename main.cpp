@@ -29,8 +29,8 @@
 
 int main(int argc, char* argv[]) {
 
-    //Declarations
-    int s = 1; //Start vertex. The minimum index for vertices is 1
+    //Input parameters
+    int s = 31; //Start vertex. The minimum index for vertices is 1
     int n = 2499; //Number of vertices
     int num_edges = 100*n; //Number of edges
 
