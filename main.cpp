@@ -59,9 +59,11 @@ int main(int argc, char* argv[]) {
     clock_t start_time_fib_heap_ver, end_time_fib_heap_ver;
     double time_ver;
     start_time_fib_heap_ver = clock();
+
     //Compute distances to nodes from start vertex using arrays
     std::vector<int> results_ver;
     results_ver = shortestReach(n, edges, s);
+
     end_time_fib_heap_ver = clock();
     time_ver = (double) (end_time_fib_heap_ver - start_time_fib_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -69,9 +71,11 @@ int main(int argc, char* argv[]) {
     clock_t start_time_bin_heap_ver, end_time_bin_heap_ver;
     double time_ver2;
     start_time_bin_heap_ver = clock();
+
     //Compute distances to nodes from start vertex using priority queues
     vector<int> results_ver2;
     results_ver2 = graph.shortestPath(s - 1);
+
     end_time_bin_heap_ver = clock();
     time_ver2 = (double) (end_time_bin_heap_ver - start_time_bin_heap_ver) / CLOCKS_PER_SEC * 1000.0;
 
@@ -87,8 +91,10 @@ int main(int argc, char* argv[]) {
     clock_t start_time_fib_heap, end_time_fib_heap;
     double time;
     start_time_fib_heap = clock();
+
     //Compute distances to nodes from start vertex using a fibonacci heap
     std::vector<int> results = shortest_reach(n, edges, s);
+
     end_time_fib_heap = clock();
     time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
 
@@ -112,8 +118,10 @@ int main(int argc, char* argv[]) {
     clock_t start_time_bin_heap, end_time_bin_heap;
     double time2;
     start_time_bin_heap = clock();
+
     //Compute distances to nodes from start vertex using a binary heap
     std::vector<int> results2 = shortest_reach2(n, edges, s);
+
     end_time_bin_heap = clock();
     time2 = (double) (end_time_bin_heap - start_time_bin_heap) / CLOCKS_PER_SEC * 1000.0;
 
