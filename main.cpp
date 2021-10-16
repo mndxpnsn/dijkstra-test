@@ -72,7 +72,7 @@ int main(int argc, char* argv[]) {
     start_time = clock();
 
     //Compute distances to nodes from start vertex using priority queues
-    vector<int> results_ver2;
+    std::vector<int> results_ver2;
     results_ver2 = graph.shortestPath(s - 1);
 
     end_time = clock();
