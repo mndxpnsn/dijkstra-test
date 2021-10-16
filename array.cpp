@@ -1,6 +1,9 @@
 /*
  * Implementation of Dijkstra's algorithm
- * using arrays. The code below was gotten from github
+ * using arrays. The code below was gotten from hackerrank
+ *
+ * Link:
+ * https://www.hackerrank.com/rest/contests/master/challenges/dijkstrashortreach/hackers/ghobad_emadi/download_solution
  */
 
 #include <iostream>
