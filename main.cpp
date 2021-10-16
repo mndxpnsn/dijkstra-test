@@ -56,28 +56,27 @@ int main(int argc, char* argv[]) {
     }
 
     //Time results based on arrays
-    clock_t start_time_fib_heap_ver, end_time_fib_heap_ver;
-    double time_ver;
-    start_time_fib_heap_ver = clock();
+    clock_t start_time, end_time;
+    double time_arrays;
+    start_time = clock();
 
     //Compute distances to nodes from start vertex using arrays
     std::vector<int> results_ver;
     results_ver = shortestReach(n, edges, s);
 
-    end_time_fib_heap_ver = clock();
-    time_ver = (double) (end_time_fib_heap_ver - start_time_fib_heap_ver) / CLOCKS_PER_SEC * 1000.0;
+    end_time = clock();
+    time_arrays = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
 
     //Time results based on priority queue
-    clock_t start_time_bin_heap_ver, end_time_bin_heap_ver;
-    double time_ver2;
-    start_time_bin_heap_ver = clock();
+    double time_prio_queue;
+    start_time = clock();
 
     //Compute distances to nodes from start vertex using priority queues
     vector<int> results_ver2;
     results_ver2 = graph.shortestPath(s - 1);
 
-    end_time_bin_heap_ver = clock();
-    time_ver2 = (double) (end_time_bin_heap_ver - start_time_bin_heap_ver) / CLOCKS_PER_SEC * 1000.0;
+    end_time = clock();
+    time_prio_queue = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
 
     //Reset operation counters
     tot_num_ops = 0;
@@ -88,15 +87,14 @@ int main(int argc, char* argv[]) {
     num_ops_e_overhead = 0;
 
     //Time results based on Fibonacci heap
-    clock_t start_time_fib_heap, end_time_fib_heap;
-    double time;
-    start_time_fib_heap = clock();
+    double time_fib;
+    start_time = clock();
 
-    //Compute distances to nodes from start vertex using a fibonacci heap
+    //Compute distances to nodes from start vertex using a Fibonacci heap
     std::vector<int> results = shortest_reach(n, edges, s);
 
-    end_time_fib_heap = clock();
-    time = (double) (end_time_fib_heap - start_time_fib_heap) / CLOCKS_PER_SEC * 1000.0;
+    end_time = clock();
+    time_fib = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
 
     //Store results computation based on Fibonacci heap
     int tot_num_ops1 = tot_num_ops;
@@ -115,15 +113,14 @@ int main(int argc, char* argv[]) {
     num_ops_e_overhead = 0;
 
     //Time results based on binary heap
-    clock_t start_time_bin_heap, end_time_bin_heap;
-    double time2;
-    start_time_bin_heap = clock();
+    double time_bin;
+    start_time = clock();
 
     //Compute distances to nodes from start vertex using a binary heap
     std::vector<int> results2 = shortest_reach2(n, edges, s);
 
-    end_time_bin_heap = clock();
-    time2 = (double) (end_time_bin_heap - start_time_bin_heap) / CLOCKS_PER_SEC * 1000.0;
+    end_time = clock();
+    time_bin = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
 
     //Store results computation based on binary heap
     int tot_num_ops2 = tot_num_ops;
@@ -151,10 +148,10 @@ int main(int argc, char* argv[]) {
     //Print results
     std::cout << "Execution results:" << std::endl;
     std::cout << "results obtained from the various methods match: " << results_match << std::endl;
-    std::cout << "timing execution arrays: " << time_ver << std::endl;
-    std::cout << "timing execution priority queue: " << time_ver2 << std::endl;
-    std::cout << "timing execution fibonacci heap: " << time << std::endl;
-    std::cout << "timing execution binary heap: " << time2 << std::endl;
+    std::cout << "timing execution arrays: " << time_arrays << std::endl;
+    std::cout << "timing execution priority queue: " << time_prio_queue << std::endl;
+    std::cout << "timing execution fibonacci heap: " << time_fib << std::endl;
+    std::cout << "timing execution binary heap: " << time_bin << std::endl;
     std::cout << std::endl;
 
     std::cout << "Measurements number of operations:" << std::endl;
