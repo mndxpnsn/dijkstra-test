@@ -1,6 +1,6 @@
 /*
  * Implementation of Dijkstra's algorithm
- * using priority queues. The code below
+ * using a priority queue. The code below
  * was gotten from github. Link:
  * https://gist.github.com/MagallanesFito/61afb009986f0319774cb079b8914bb2
  */
