@@ -61,8 +61,7 @@ int main(int argc, char* argv[]) {
     start_time = clock();
 
     //Compute distances to nodes from start vertex using arrays
-    std::vector<int> results_ver;
-    results_ver = shortestReach(n, edges, s);
+    std::vector<int> results_arrays = shortestReach(n, edges, s);
 
     end_time = clock();
     time_arrays = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
@@ -72,8 +71,7 @@ int main(int argc, char* argv[]) {
     start_time = clock();
 
     //Compute distances to nodes from start vertex using priority queues
-    std::vector<int> results_ver2;
-    results_ver2 = graph.shortestPath(s - 1);
+    std::vector<int> results_prio_queue = graph.shortestPath(s - 1);
 
     end_time = clock();
     time_prio_queue = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
@@ -91,7 +89,7 @@ int main(int argc, char* argv[]) {
     start_time = clock();
 
     //Compute distances to nodes from start vertex using a Fibonacci heap
-    std::vector<int> results = shortest_reach(n, edges, s);
+    std::vector<int> results_fib = shortest_reach(n, edges, s);
 
     end_time = clock();
     time_fib = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
@@ -117,7 +115,7 @@ int main(int argc, char* argv[]) {
     start_time = clock();
 
     //Compute distances to nodes from start vertex using a binary heap
-    std::vector<int> results2 = shortest_reach2(n, edges, s);
+    std::vector<int> results_bin = shortest_reach2(n, edges, s);
 
     end_time = clock();
     time_bin = (double) (end_time - start_time) / CLOCKS_PER_SEC * 1000.0;
@@ -132,17 +130,17 @@ int main(int argc, char* argv[]) {
 
     //Check if results of the various methods are the same
     bool results_match = true;
-    int size_res1 = (int) results.size();
-    int size_res2 = (int) results2.size();
-    int size_ver = (int) results_ver.size();
-    int size_ver2 = (int) results_ver2.size();
-    if(size_res1 != size_res2) { results_match = false; }
-    if(size_res2 != size_ver) { results_match = false; }
-    if(size_res1 != size_ver2) { results_match = false; }
-    for(int i = 0; i < size_res1; ++i) {
-        if(results[i] != results2[i]) { results_match = false; }
-        if(results2[i] != results_ver[i]) { results_match = false; }
-        if(results[i] != results_ver2[i]) { results_match = false; }
+    int size_fib = (int) results_fib.size();
+    int size_bin = (int) results_bin.size();
+    int size_arrays = (int) results_arrays.size();
+    int size_prio = (int) results_prio_queue.size();
+    if(size_fib != size_bin) { results_match = false; }
+    if(size_bin != size_arrays) { results_match = false; }
+    if(size_fib != size_prio) { results_match = false; }
+    for(int i = 0; i < size_fib; ++i) {
+        if(results_fib[i] != results_bin[i]) { results_match = false; }
+        if(results_bin[i] != results_arrays[i]) { results_match = false; }
+        if(results_fib[i] != results_prio_queue[i]) { results_match = false; }
     }
 
     //Print results
@@ -177,30 +175,26 @@ int main(int argc, char* argv[]) {
 
     //Print results based on Fibonacci heap
     std::cout << "Shortest distances from start vertex:" << std::endl;
-    int size_results = (int) results.size();
-    for(int i = 0; i < size_results; ++i) {
-        std::cout << results[i] << " ";
+    for(int i = 0; i < size_fib; ++i) {
+        std::cout << results_fib[i] << " ";
     }
     std::cout << std::endl;
 
     //Print results based on binary heap
-    int size_results2 = (int) results2.size();
-    for(int i = 0; i < size_results2; ++i) {
-        std::cout << results2[i] << " ";
+    for(int i = 0; i < size_bin; ++i) {
+        std::cout << results_bin[i] << " ";
     }
     std::cout << std::endl;
 
     //Print results based on arrays
-    int size_results_ver = (int) results_ver.size();
-    for(int i = 0; i < size_results_ver; ++i) {
-        std::cout << results_ver[i] << " ";
+    for(int i = 0; i < size_arrays; ++i) {
+        std::cout << results_arrays[i] << " ";
     }
     std::cout << std::endl;
 
     //Print results based on priority queues
-    int size_results_ver2 = (int) results_ver2.size();
-    for(int i = 0; i < size_results_ver2; i++){
-        std::cout << results_ver2[i] << " ";
+    for(int i = 0; i < size_prio; i++){
+        std::cout << results_prio_queue[i] << " ";
     }
     std::cout << std::endl;
 

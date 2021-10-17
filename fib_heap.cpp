@@ -81,6 +81,8 @@ void link_dup_degree(FibHeap* H, node** A, node*& x) {
 
     if(A[d] != x) { //Don't link nodes to themselves
         while(A[d] != NULL) {
+            num_ops_extract_min++;
+            tot_num_ops++;
             node* y = A[d];
             //Link x and y
             if(y->key > x->key) {
