@@ -38,7 +38,7 @@ typedef struct Node {
 
     int index_og;
     Node* pi;
-	Node *parent;
+    Node *parent;
 } node;
 
 class FibHeap {
